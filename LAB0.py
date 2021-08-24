@@ -4,8 +4,6 @@
 # More information on pass statement: 
 #    https://docs.python.org/3/reference/simple_stmts.html#the-pass-statement
 
-
-
 def sumSquares(aList):
     """
         >>> sumSquares([1,5,-3,5.5,359,8,14,-25,1000])
@@ -21,20 +19,16 @@ def sumSquares(aList):
 
     """
     # --- YOU CODE STARTS HERE
-    pass   # remove this line before submitting
+    if not isinstance(aList, list) or len(aList) == 0: #checking if input is a list or is empty
+        return None
 
-
-
-
-    
-
-
-
-
-
-
+    finalSum = 0
+    for item in aList:
+        if isinstance(item, (float, int, complex)) and item > 5 and item < 500: #check if item in list is numerical and in bounds
+            finalSum += item**2
+    return finalSum
 
 ## Uncomment next 3 lines if not running doctest in the command line
-#if __name__ == "__main__":
-#    import doctest
-#    doctest.testmod()
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod()
