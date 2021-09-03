@@ -58,6 +58,7 @@ def removePunctuation(aString):
     '''
         >>> removePunctuation("Dots...................... many dots..X")
         ('Dots                       many dots  X', {'.': 24})
+        
         >>> data = removePunctuation("I like chocolate cake!!(!! It's the best flavor..;.$ for real")
         >>> data[0]
         'I like chocolate cake      It s the best flavor      for real'
@@ -67,10 +68,22 @@ def removePunctuation(aString):
     '''
     # - YOUR CODE STARTS HERE -
     #pass
-    if not isinstance(aString, str) and len(str) > 0:
-        returen 
+    if not isinstance(aString, str) or len(aString) < 1:
+        return None
+    
+    removedDict = {}
+    for index in (0, len(aString) - 1):
+        print(index)
+        temp = aString[index]
+        if not temp.isalpha:
+            aString[index].replace(' ')
+            if temp in removedDict:
+                removedDict[temp] += 1
+            else:
+                removedDict.setdefault(temp, 1)
+    retList = [aString, removedDict]
 
-
+    return retList
 
 
 if __name__ == "__main__":
