@@ -72,18 +72,19 @@ def removePunctuation(aString):
     if not isinstance(aString, str) or len(aString) < 1:
         return None
 
+    retString = ''
     removedList = {}
     for i in range(len(aString)):
         curr = aString[i]
-        if not curr.isalpha:
+        if not curr.isalpha() and curr != ' ':
             if curr in removedList:
                 removedList[curr] += 1
             else:
                 removedList[curr] = 1
-            aString[i] = ' '
-    
-    retDict = [aString, removedList]
-    return retDict
+            curr = ' '
+        retString += curr   
+
+    return (retString, removedList)
 
 if __name__ == "__main__":
     import doctest
