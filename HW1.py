@@ -149,18 +149,20 @@ def largeFactor(num):
         40
         >>> largeFactor(13)
         1
+        >>> largeFactor(57)
+        19
     """
     #- YOUR CODE STARTS HERE
-    pass
-
-
-
-
-
+    #pass
+    for factor in range(2, round(num / 2) + 1): #iterating through first half of num
+        if num % factor == 0: #checking if it is a factor
+            return round(num/factor) #returning largest factor
+    
+    return 1 #default case
 
 #  To run doctes per function, uncomment the next three lines
 #  and replace the word rectangle for the function name you want to test
 
 if __name__=='__main__':
     import doctest
-    doctest.run_docstring_examples(hailstone, globals(), name='HW1',verbose=True)
+    doctest.run_docstring_examples(largeFactor, globals(), name='HW1',verbose=True)
