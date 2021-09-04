@@ -15,13 +15,13 @@ def joinList(n):
     '''
     # - YOUR CODE STARTS HERE -
     #pass
-    if not isinstance(n, int) or (n < 1): 
+    if not isinstance(n, int) or (n < 1): #checking if n is a usable type
         return None
 
     retList = []
-    for x in range(n, 0, -1):
+    for x in range(n, 0, -1): #loop from n to 0
         retList.append(x)
-        retList.insert(0, x)
+        retList.insert(0, x) #inserting x at the beginning of retList
 
     return retList
 
@@ -45,15 +45,20 @@ def isValid(txt):
     '''
     # - YOUR CODE STARTS HERE -
     # pass
-    if not isinstance(txt, str) or len(txt) < 1: 
+    if not isinstance(txt, str) or len(txt) < 1: #checking if txt is a usable type
         return None
 
-    letters = {}
-    if (txt.isalpha()):
-        letters = set(txt.lower())
+    if not txt.isalpha(): #check if txt is alpha only
+        return False
 
-    return (len(txt) == 26 and len(letters) == len(txt))
-
+    letterDict = {}
+    for chr in txt.lower(): #iterate through txt
+        if chr in letterDict: #checking if current letter exists in letterDict
+            return False
+        else:
+            letterDict[chr] = 1 #adding chr to letterDict
+    
+    return (len(letterDict) == 26) #checking if letterDict is exactly 26 letters
 
 def removePunctuation(aString):
     '''
@@ -69,22 +74,22 @@ def removePunctuation(aString):
     '''
     # - YOUR CODE STARTS HERE -
     #pass
-    if not isinstance(aString, str) or len(aString) < 1:
+    if not isinstance(aString, str) or len(aString) < 1: #checking if aString is a usable type
         return None
 
     retString = ''
-    removedList = {}
-    for i in range(len(aString)):
+    removedDict = {}
+    for i in range(len(aString)): #iterate through aString indeces
         curr = aString[i]
-        if not curr.isalpha() and curr != ' ':
-            if curr in removedList:
-                removedList[curr] += 1
+        if not curr.isalpha() and curr != ' ': #checking if curr is not a letter and not a space
+            if curr in removedDict:
+                removedDict[curr] += 1 #increment the curr value in Dict
             else:
-                removedList[curr] = 1
+                removedDict[curr] = 1 #set the curr value in Dict
             curr = ' '
         retString += curr   
 
-    return (retString, removedList)
+    return (retString, removedDict)
 
 if __name__ == "__main__":
     import doctest
