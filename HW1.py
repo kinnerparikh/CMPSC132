@@ -20,8 +20,17 @@ def rectangle(perimeter,area):
         False
     """
     #- YOUR CODE STARTS HERE
-    pass
+    #pass
+    if not perimeter % 2 == 0: 
+        return False
 
+    longSide = (perimeter + (perimeter**2 - 16*area)**0.5)/4
+    shortSide = area / longSide
+
+    if longSide.is_integer() and shortSide.is_integer(): 
+        return round(longSide)
+    else: 
+        return False
 
 
 
@@ -38,10 +47,16 @@ def frequency(aString):
         ('consonant', {'o': 2, 'n': 3, 'e': 3, 'w': 1, 'h': 1, 'i': 3, 's': 1, 'b': 1, 'g': 1, 't': 1, 'r': 1, 'a': 1, 'd': 1})
     """
     #- YOUR CODE STARTS HERE
-    pass
-
-
-
+    letterDict = {}
+    for letter in aString.lower():
+        if letter.isAlpha():
+            if letter in letterDict:
+                letterDict[letter] += 1
+            else:
+                letterDict[letter] = 1
+    
+    maxInstance = 0
+    for value in letterDict.
 
 
 def successors(file):
@@ -121,6 +136,6 @@ def largeFactor(num):
 #  To run doctes per function, uncomment the next three lines
 #  and replace the word rectangle for the function name you want to test
 
-#if __name__=='__main__':
-#    import doctest
-#    doctest.run_docstring_examples(rectangle, globals(), name='HW1',verbose=True)
+if __name__=='__main__':
+    import doctest
+    doctest.run_docstring_examples(rectangle, globals(), name='HW1',verbose=True)
