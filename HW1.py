@@ -105,9 +105,16 @@ def getPosition(num, digit):
         False
     """
     #- YOUR CODE STARTS HERE
-    pass
+    #pass
+    currPos = 0
+    while not num == 0: #looping till all digits are checked
+        currPos += 1
+        if num % 10 == digit: #checking if the last digit is equal to digit
+            return currPos
+        else:
+            num = num // 10 #floor divide num by 10
 
-
+    return False
 
 def hailstone(n):
     """
@@ -148,4 +155,4 @@ def largeFactor(num):
 
 if __name__=='__main__':
     import doctest
-    doctest.run_docstring_examples(frequency, globals(), name='HW1',verbose=True)
+    doctest.run_docstring_examples(getPosition, globals(), name='HW1',verbose=True)
