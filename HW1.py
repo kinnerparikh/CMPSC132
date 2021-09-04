@@ -21,13 +21,13 @@ def rectangle(perimeter,area):
     """
     #- YOUR CODE STARTS HERE
     #pass
-    if not perimeter % 2 == 0: 
+    if not perimeter % 2 == 0: #perimeters cannot be odd
         return False
 
-    longSide = (perimeter + (perimeter**2 - 16*area)**0.5)/4
+    longSide = (perimeter + (perimeter**2 - 16*area)**0.5)/4 #logic for finding one side of the rectangle
     shortSide = area / longSide
 
-    if longSide.is_integer() and shortSide.is_integer(): 
+    if longSide.is_integer() and shortSide.is_integer(): #checking if both side lengths are integers
         return round(longSide)
     else: 
         return False
@@ -48,16 +48,26 @@ def frequency(aString):
     """
     #- YOUR CODE STARTS HERE
     letterDict = {}
-    for letter in aString.lower():
-        if letter.isAlpha():
-            if letter in letterDict:
+    for letter in aString.lower(): #iterate through string
+        if letter.isalpha():
+            if letter in letterDict: #check if key already exists in the dictionary
                 letterDict[letter] += 1
             else:
                 letterDict[letter] = 1
     
-    maxInstance = 0
-    for value in letterDict.
+    maxValue = 0
+    maxLetter = ''
+    for letter, value in letterDict.items(): #iterating through the dictionary items
+        if value > maxValue: #checking if the number of occurances is greater than the previous greatest
+            maxLetter = letter
+            maxValue = value
 
+    if maxLetter in 'aeiou': #check if the letter is a vowel
+        return ('vowel', letterDict)
+    else:
+        return ('consonant', letterDict)
+
+    
 
 def successors(file):
     """
@@ -138,4 +148,4 @@ def largeFactor(num):
 
 if __name__=='__main__':
     import doctest
-    doctest.run_docstring_examples(rectangle, globals(), name='HW1',verbose=True)
+    doctest.run_docstring_examples(frequency, globals(), name='HW1',verbose=True)
