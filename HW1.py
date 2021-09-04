@@ -130,8 +130,16 @@ def hailstone(n):
         [19, 58, 29, 88, 44, 22, 11, 34, 17, 52, 26, 13, 40, 20, 10, 5, 16, 8, 4, 2, 1]
     """
     #- YOUR CODE STARTS HERE
-    pass
-
+    #pass
+    retList = [n] #initialize list with n
+    while not n == 1: #loop till n becomes 1
+        if (n % 2 == 0): #even case
+            n /= 2
+        else: #odd case
+            n = (3 * n) + 1
+        retList.append(round(n)) #append n to the list
+    
+    return retList
 
 def largeFactor(num):
     """
@@ -155,4 +163,4 @@ def largeFactor(num):
 
 if __name__=='__main__':
     import doctest
-    doctest.run_docstring_examples(getPosition, globals(), name='HW1',verbose=True)
+    doctest.run_docstring_examples(hailstone, globals(), name='HW1',verbose=True)
