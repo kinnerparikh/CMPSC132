@@ -15,15 +15,15 @@ def joinList(n):
     '''
     # - YOUR CODE STARTS HERE -
     #pass
-    if not isinstance(n, int) or (n < 1): return None
+    if not isinstance(n, int) or (n < 1): 
+        return None
 
     retList = []
-    for x in range(1, n + 1):
+    for x in range(n, 0, -1):
         retList.append(x)
+        retList.insert(0, x)
 
-    retList += retList[::-1]
-
-    print(retList)
+    return retList
 
 
 def isValid(txt):
@@ -50,9 +50,10 @@ def isValid(txt):
 
     letters = {}
     if (txt.isalpha()):
-        letters = set(txt)
+        letters = set(txt.lower())
 
-    return (len(letters) == len(txt))
+    return (len(txt) == 26 and len(letters) == len(txt))
+
 
 def removePunctuation(aString):
     '''
@@ -70,21 +71,19 @@ def removePunctuation(aString):
     #pass
     if not isinstance(aString, str) or len(aString) < 1:
         return None
-    
-    removedDict = {}
-    for index in (0, len(aString) - 1):
-        print(index)
-        temp = aString[index]
-        if not temp.isalpha:
-            aString[index].replace(' ')
-            if temp in removedDict:
-                removedDict[temp] += 1
+
+    removedList = {}
+    for i in range(len(aString)):
+        curr = aString[i]
+        if not curr.isalpha:
+            if curr in removedList:
+                removedList[curr] += 1
             else:
-                removedDict.setdefault(temp, 1)
-    retList = [aString, removedDict]
-
-    return retList
-
+                removedList[curr] = 1
+            aString[i] = ' '
+    
+    retDict = [aString, removedList]
+    return retDict
 
 if __name__ == "__main__":
     import doctest
