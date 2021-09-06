@@ -88,9 +88,30 @@ def successors(file):
     with open(file) as f: 
         contents = f.read()
 
-
     #- YOUR CODE STARTS HERE
+    uncleanedList = contents.split(' ')
+    uncleanedList.replace('\n', ' ')
+    cleanedList = []
+    for index in range(0, len(uncleanedList)):
+        curr = uncleanedList[index]
+        if not curr.isalnum():
+            for i in range(0, len(curr)):
+                if not curr[i].isalnum:
+                    uncleanedList[index].replace(curr[i])
+        else:
+            cleanedList.append(curr)
 
+    contentsList = fixedStr.split(' ')
+    retDict = {'.': [contentsList[0]]}
+
+    for index in range(0, len(contentsList - 1)):
+        curr = contentsList[index]
+        if curr in retDict:
+            retDict[curr].append(contentsList[index + 1])
+        else:
+            retDict[curr] = [contentsList[index + 1]]
+    
+    return retDict
 
 
 def getPosition(num, digit):
@@ -165,4 +186,4 @@ def largeFactor(num):
 
 if __name__=='__main__':
     import doctest
-    doctest.run_docstring_examples(largeFactor, globals(), name='HW1',verbose=True)
+    doctest.run_docstring_examples(successors, globals(), name='HW1',verbose=True)
