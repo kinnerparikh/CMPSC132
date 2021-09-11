@@ -89,27 +89,40 @@ def successors(file):
         contents = f.read()
 
     #- YOUR CODE STARTS HERE
-    uncleanedList = contents.split(' ')
-    uncleanedList.replace('\n', ' ')
+    
+    uncleanedList = contents.replace('\n', ' ').split(' ') #remove the \n and split
     cleanedList = []
-    for index in range(0, len(uncleanedList)):
+    for index in range(0, len(uncleanedList)): #iterate through the list
         curr = uncleanedList[index]
-        if not curr.isalnum():
-            for i in range(0, len(curr)):
-                if not curr[i].isalnum:
-                    uncleanedList[index].replace(curr[i])
+        if not curr.isalnum(): #checking if the current value is alphanumeric
+            currList = list(curr) #splitting into individual characters
+            for i in range(len(currList) - 1, 0, -1): #iterating through the list backwards
+                if not currList[i].isalnum():
+                    temp = currList[:i]       #inputting spaces into the list
+                    temp.append(" ")
+                    temp.append(currList[i])
+                    temp.append(" ")
+                    temp += currList[i + 1:]
+                    currList = temp
+                    i -= 1
+            combinedList = ''
+            for i in range(0, len(currList)): #combining list into 1 string
+                combinedList += currList[i]
+            cleanedList += combinedList.split(' ')
         else:
             cleanedList.append(curr)
+        
+        cleanedList = ' '.join(cleanedList).split() #cleaning up the list to clear empty values
 
-    contentsList = fixedStr.split(' ')
-    retDict = {'.': [contentsList[0]]}
+    retDict = {'.': [cleanedList[0]]} #initializing dictionary
 
-    for index in range(0, len(contentsList - 1)):
-        curr = contentsList[index]
-        if curr in retDict:
-            retDict[curr].append(contentsList[index + 1])
+    for index in range(0, len(cleanedList) - 1): #iterating through cleanedList
+        key = cleanedList[index]
+        if key in retDict: 
+            if cleanedList[index + 1] not in retDict[key]: #checking if the value already exists
+                retDict[key].append(cleanedList[index + 1])
         else:
-            retDict[curr] = [contentsList[index + 1]]
+            retDict[key] = [cleanedList[index + 1]] #creating a new key value pair 
     
     return retDict
 
