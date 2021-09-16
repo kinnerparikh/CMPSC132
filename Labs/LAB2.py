@@ -115,25 +115,31 @@ class VendingMachine:
 
 
     def __init__(self):
-        self.items = {156: [1.5, 3], 254: [2.0, 3], 384: [2.5, 3], 879: [3.0, 3]}
+        '''
+            In this class, self refers to VendingMachine objects
+
+            items: dict{int, list} initialized to specification
+            balance: int
+        '''
+        self.items = {156: [1.5, 3], 254: [2.0, 3], 384: [2.5, 3], 879: [3.0, 3]} 
         self.balance = 0
 
     def purchase(self, item, qty=1):
-        if item not in self.items.keys():
+        if item not in self.items.keys(): #item does not exist
             return 'Invalid item'
         
-        if not self.isStocked:
+        if not self.isStocked: #machine is not in stock
             return 'Machine out of stock'
         
-        currentStock = self.items[item][1]
+        currentStock = self.items[item][1] #current stock of the item from dict
         if currentStock == 0:
             return 'Item out of stock'
         
-        if currentStock < qty:
+        if currentStock < qty: #not enough stock for request
             return f"Current {item} stock: {currentStock}, try again"
         
-        totalPrice = qty * self.items[item][0]
-        if totalPrice > self.balance:
+        totalPrice = qty * self.items[item][0] #price of the transaction
+        if totalPrice > self.balance: #not enough deposited
             return f"Please deposit ${totalPrice - self.balance}"
 
         self.items[item][1] -= qty
@@ -146,22 +152,33 @@ class VendingMachine:
             return f"Item dispensed, take your ${change} back"    
 
     def deposit(self, amount):
+        '''
+            Deposits money into the vending machine, adding
+            it to the current balance
+        '''
         if self.isStocked:
-            self.balance += amount
+            self.balance += amount #adding the deposited amount to the balance
             return f"Balance: ${self.balance}"
         
         return f"Machine out of stock. Take your ${amount} back"
 
-
     def _restock(self, item, stock):
+        '''
+            Protected method (naming convention starting with '_')
+            Adds stock to the vending machine
+        '''
         if item not in self.items.keys():
             return "Invalid item"
-        self.items[item][1] += stock
+        self.items[item][1] += stock #adding the stock
         return f"Current item stock: {self.items[item][1]}"
 
     @property
     def isStocked(self):
-        for x in self.items.values():
+        '''
+            Returns True if any item has any nonzero stock,
+            and False if all items have no stock
+        '''
+        for x in self.items.values(): #checks if any of the values are non-zero
             if x[1] != 0:
                 return True
         
@@ -169,9 +186,15 @@ class VendingMachine:
 
     @property
     def getStock(self):
+        '''
+            Gets the current stock status of the machine
+        '''
         return self.items
 
     def cancelTransaction(self):
+        '''
+            Returns the current balance to the user
+        '''
         if self.balance == 0:
             return None
         
@@ -189,6 +212,9 @@ class Point2D:
 
     def __mul__(self, val):
         return Point2D(self.x * val, self.y * val)
+
+    def __rmul__(self, val):
+        return self * val
 
 class Line: 
     ''' 
@@ -242,56 +268,73 @@ class Line:
         self.point2 = point2
 
     #--- YOUR CODE STARTS HERE
+    @property
     def getDistance(self):
+        '''
+            Gets the distance between the two Point2D objects
+            that created the Line
+            
+            d = sqrt((x2-x1)^2 + (y2-y1)^2)
+        '''
         xComponent = self.point2.x - self.point1.x
         yComponent = self.point2.y - self.point1.y
-        x = round((xComponent**2 + yComponent**2)**0.5, 3)       
-        return x
+
+        return round((xComponent**2 + yComponent**2)**0.5, 3) #solving for the distance and rounding    
     
     #--- YOUR CODE STARTS HERE
+    @property
     def getSlope(self):
+        '''
+            Gets the slope (gradient) of the Line object
+        '''
         xComponent = self.point2.x - self.point1.x
-        yComponent = self.point2.y - self.point2.y
-        if xComponent == 0:
-            return math.inf
+        yComponent = self.point2.y - self.point1.y
         
-        x = round(yComponent/xComponent, 3)
-        return x
+        if xComponent == 0: #cannot divide by 0 so return slope of infinity
+            return math.inf
+        return round(yComponent/xComponent, 3) #solving for the slope and rounding
 
 
     #--- YOUR CODE CONTINUES HERE
     def __str__(self) -> str:
-        if math.isinf(self.getSlope()):
+        '''
+            Provides a legible representaiotn for instances of 
+            the Line class
+        '''
+        if math.isinf(self.getSlope):
             return "Undefined"
 
-        yIntercept = self.point1.y - self.getSlope()*self.point1.x
+        yIntercept = round(self.point1.y - self.getSlope*self.point1.x, 3) #solving for the y-intercept
         
-        if self.getSlope() == 0:
+        if self.getSlope == 0: #case for when the slope is zero --> y = b
             return f"y = {yIntercept}"
         
-        return f"y = {self.getSlope()}x + {yIntercept}"
+        return f"y = {self.getSlope}x + {yIntercept}" #y = mx + b
 
     def __repr__(self) -> str:
         return self.__str__()
 
     def __eq__(self, o: object) -> bool:
-        if not isinstance(o, Line):
+        '''
+            Determines if two Line objects are equal
+        '''
+        if not isinstance(o, Line): #checking if o is a Line
             return False
         return self.point1 == o.point1 and self.point2 == o.point2
     
     def __mul__(self, value):
-        if not isinstance(value, int):
+        '''
+            To support the * operator
+        '''
+        if not isinstance(value, int): 
             return None
         
         return Line(self.point1 * value, self.point2 * value)
     
     def __rmul__(self, value):
-        return self.__mul__(self, value)
+        return self * value
 
 
 if __name__=='__main__':
     import doctest
     doctest.run_docstring_examples(VendingMachine, globals(), name='HW1',verbose=True)
-'''john_vendor = Vendor('John Doe')
-west_machine = john_vendor.install()
-print(west_machine.getStock)'''
