@@ -115,37 +115,38 @@ class VendingMachine:
 
 
     def __init__(self):
-        self.items = {156: [3, 1.5], 254: [3, 2.0], 384: [3, 2.5], 879: [3, 3.0]}
+        self.items = {156: [1.5, 3], 254: [2.0, 3], 384: [2.5, 3], 879: [3.0, 3]}
         self.balance = 0
 
     def purchase(self, item, qty=1):
         if item not in self.items.keys():
             return 'Invalid item'
         
-        if self.isStocked():
+        if not self.isStocked:
             return 'Machine out of stock'
         
-        currentStock = self.items.values()[self.items[item]][0]
+        currentStock = self.items[item][1]
         if currentStock == 0:
             return 'Item out of stock'
         
         if currentStock < qty:
             return f"Current {item} stock: {currentStock}, try again"
         
-        totalPrice = qty * self.items[item][1]
+        totalPrice = qty * self.items[item][0]
         if totalPrice > self.balance:
             return f"Please deposit ${totalPrice - self.balance}"
 
-        self.items[item][0] -= qty
-        self.balance -= totalPrice
-        if self.balance == 0:
+        self.items[item][1] -= qty
+        change = self.balance - totalPrice
+        self.balance = 0
+        if change == 0:
             return "Item dispensed"
 
-        if self.balance > 0:
-            return f"Item dispensed, take your ${self.balance} back"    
+        if change > 0:
+            return f"Item dispensed, take your ${change} back"    
 
     def deposit(self, amount):
-        if self.isStocked():
+        if self.isStocked:
             self.balance += amount
             return f"Balance: ${self.balance}"
         
@@ -155,24 +156,28 @@ class VendingMachine:
     def _restock(self, item, stock):
         if item not in self.items.keys():
             return "Invalid item"
-        self.items[item][0] += stock
-        return f"Current item stock: {self.items[item][0]}"
+        self.items[item][1] += stock
+        return f"Current item stock: {self.items[item][1]}"
 
-
+    @property
     def isStocked(self):
         for x in self.items.values():
-            if x[0] != 0:
-                return False
+            if x[1] != 0:
+                return True
         
-        return True
-        
+        return False
 
+    @property
     def getStock(self):
         return self.items
 
     def cancelTransaction(self):
         if self.balance == 0:
             return None
+        
+        remaining = self.balance
+        self.balance = 0
+        return f"Take your ${remaining} back"
 
 class Point2D:
     def __init__(self, x, y):
@@ -240,7 +245,8 @@ class Line:
     def getDistance(self):
         xComponent = self.point2.x - self.point1.x
         yComponent = self.point2.y - self.point1.y
-        return round((xComponent**2 + yComponent**2)**0.5, 3)       
+        x = round((xComponent**2 + yComponent**2)**0.5, 3)       
+        return x
     
     #--- YOUR CODE STARTS HERE
     def getSlope(self):
@@ -249,7 +255,8 @@ class Line:
         if xComponent == 0:
             return math.inf
         
-        return round(yComponent/xComponent, 3)
+        x = round(yComponent/xComponent, 3)
+        return x
 
 
     #--- YOUR CODE CONTINUES HERE
@@ -268,6 +275,8 @@ class Line:
         return self.__str__()
 
     def __eq__(self, o: object) -> bool:
+        if not isinstance(o, Line):
+            return False
         return self.point1 == o.point1 and self.point2 == o.point2
     
     def __mul__(self, value):
@@ -282,4 +291,7 @@ class Line:
 
 if __name__=='__main__':
     import doctest
-    doctest.run_docstring_examples(Line, globals(), name='HW1',verbose=True)
+    doctest.run_docstring_examples(VendingMachine, globals(), name='HW1',verbose=True)
+'''john_vendor = Vendor('John Doe')
+west_machine = john_vendor.install()
+print(west_machine.getStock)'''
