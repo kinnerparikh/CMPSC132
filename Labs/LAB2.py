@@ -3,6 +3,7 @@
 # REMINDER: The work in this assignment must be your own original work and must be completed alone.
 
 import random
+import math
 
 class Vendor:
 
@@ -112,49 +113,77 @@ class VendingMachine:
         >>> east_machine.cancelTransaction()
     '''
 
+
     def __init__(self):
-        #--- YOUR CODE STARTS HERE
-        pass
-
-
+        self.items = {156: [3, 1.5], 254: [3, 2.0], 384: [3, 2.5], 879: [3, 3.0]}
+        self.balance = 0
 
     def purchase(self, item, qty=1):
-        #--- YOUR CODE STARTS HERE
-        pass
+        if item not in self.items.keys():
+            return 'Invalid item'
         
+        if self.isStocked():
+            return 'Machine out of stock'
+        
+        currentStock = self.items.values()[self.items[item]][0]
+        if currentStock == 0:
+            return 'Item out of stock'
+        
+        if currentStock < qty:
+            return f"Current {item} stock: {currentStock}, try again"
+        
+        totalPrice = qty * self.items[item][1]
+        if totalPrice > self.balance:
+            return f"Please deposit ${totalPrice - self.balance}"
 
+        self.items[item][0] -= qty
+        self.balance -= totalPrice
+        if self.balance == 0:
+            return "Item dispensed"
+
+        if self.balance > 0:
+            return f"Item dispensed, take your ${self.balance} back"    
 
     def deposit(self, amount):
-        #--- YOUR CODE STARTS HERE
-        pass
+        if self.isStocked():
+            self.balance += amount
+            return f"Balance: ${self.balance}"
+        
+        return f"Machine out of stock. Take your ${amount} back"
 
 
     def _restock(self, item, stock):
-        #--- YOUR CODE STARTS HERE
-        pass
+        if item not in self.items.keys():
+            return "Invalid item"
+        self.items[item][0] += stock
+        return f"Current item stock: {self.items[item][0]}"
 
 
-    #--- YOUR CODE STARTS HERE
     def isStocked(self):
-        pass
+        for x in self.items.values():
+            if x[0] != 0:
+                return False
+        
+        return True
         
 
-    #--- YOUR CODE STARTS HERE
     def getStock(self):
-        pass
-
+        return self.items
 
     def cancelTransaction(self):
-        #--- YOUR CODE STARTS HERE
-        pass
-       
-
+        if self.balance == 0:
+            return None
 
 class Point2D:
     def __init__(self, x, y):
         self.x = x
         self.y = y
 
+    def __eq__(self, o: object) -> bool:
+        return (self.x == o.x) and (self.y == o.y)
+
+    def __mul__(self, val):
+        return Point2D(self.x * val, self.y * val)
 
 class Line: 
     ''' 
@@ -204,17 +233,53 @@ class Line:
         y = 5.0
     '''
     def __init__(self, point1, point2):
-        #--- YOUR CODE STARTS HERE
-        pass
+        self.point1 = point1
+        self.point2 = point2
 
     #--- YOUR CODE STARTS HERE
     def getDistance(self):
-        pass
-       
+        xComponent = self.point2.x - self.point1.x
+        yComponent = self.point2.y - self.point1.y
+        return round((xComponent**2 + yComponent**2)**0.5, 3)       
     
     #--- YOUR CODE STARTS HERE
     def getSlope(self):
-        pass
+        xComponent = self.point2.x - self.point1.x
+        yComponent = self.point2.y - self.point2.y
+        if xComponent == 0:
+            return math.inf
+        
+        return round(yComponent/xComponent, 3)
 
 
     #--- YOUR CODE CONTINUES HERE
+    def __str__(self) -> str:
+        if math.isinf(self.getSlope()):
+            return "Undefined"
+
+        yIntercept = self.point1.y - self.getSlope()*self.point1.x
+        
+        if self.getSlope() == 0:
+            return f"y = {yIntercept}"
+        
+        return f"y = {self.getSlope()}x + {yIntercept}"
+
+    def __repr__(self) -> str:
+        return self.__str__()
+
+    def __eq__(self, o: object) -> bool:
+        return self.point1 == o.point1 and self.point2 == o.point2
+    
+    def __mul__(self, value):
+        if not isinstance(value, int):
+            return None
+        
+        return Line(self.point1 * value, self.point2 * value)
+    
+    def __rmul__(self, value):
+        return self.__mul__(self, value)
+
+
+if __name__=='__main__':
+    import doctest
+    doctest.run_docstring_examples(Line, globals(), name='HW1',verbose=True)
