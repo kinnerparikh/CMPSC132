@@ -294,7 +294,7 @@ class Line:
             return math.inf
         return round(yComponent/xComponent, 3) #solving for the slope and rounding
 
-
+    
     #--- YOUR CODE CONTINUES HERE
     def __str__(self) -> str:
         '''
