@@ -1,3 +1,7 @@
+def doubleDigits(n):
+    if (n < 1): return 0
+    return (n%10)*11 + 100*doubleDigits(n//10)
+
 def canWin(n):
     if (n <= 0): return False
     if (n == 1): return True
@@ -8,4 +12,4 @@ def canWin(n):
 
     return takeOne or takeTwo or takeThree
 
-print(canWin(5))
+print(doubleDigits(1234))
