@@ -79,7 +79,7 @@ class VendingMachine:
         'Balance: $4.5'
         >>> west_machine.purchase(156,3)
         'Item dispensed'
-        >>> west_machine.getStock
+        >>> west_machine.getStock 1
         {156: [1.5, 0], 254: [2.0, 3], 384: [2.5, 0], 879: [3.0, 3]}
         >>> west_machine.purchase(156)
         'Item out of stock'
