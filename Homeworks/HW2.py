@@ -1,8 +1,6 @@
 # HW2
 # Due Date: 09/24/2021, 11:59PM
 # REMINDER: The work in this assignment must be your own original work and must be completed alone.
-
-from functools import total_ordering
 import random
 
 class Course:
@@ -72,7 +70,6 @@ class Catalog:
             return 'Course not found'
         self.courseOfferings.pop(cid)
         return 'Course removed successfully'
-
 
 class Semester:
     '''
@@ -148,6 +145,7 @@ class Semester:
     def isFullTime(self):
         return self.totalCredits >= 12
 
+
 class Loan:
     '''
         >>> import random
@@ -169,21 +167,19 @@ class Loan:
     
 
     def __init__(self, amount):
-        # YOUR CODE STARTS HERE
-        pass
+        self.loan_id = self.__getloanID
+        self.amount = amount
 
 
     def __str__(self):
-        # YOUR CODE STARTS HERE
-        pass
+        return f'Balance: ${self.amount}'
 
     __repr__ = __str__
 
 
     @property
     def __getloanID(self):
-        # YOUR CODE STARTS HERE
-        pass
+        return random.randrange(10000, 99999)
 
 class Person:
     '''
@@ -488,4 +484,4 @@ class StudentAccount:
 if __name__=='__main__':
     import doctest
     #doctest.testmod()     # Uncomment this line to run all docstrings
-    doctest.run_docstring_examples(Semester, globals(), name='HW2',verbose=True)   # Replace Course with the name of the class you want to run its doctest
+    doctest.run_docstring_examples(Loan, globals(), name='HW2',verbose=True)   # Replace Course with the name of the class you want to run its doctest
