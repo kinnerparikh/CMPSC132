@@ -1,6 +1,7 @@
 # HW2
 # Due Date: 09/24/2021, 11:59PM
 # REMINDER: The work in this assignment must be your own original work and must be completed alone.
+from math import e
 import random
 
 class Course:
@@ -145,7 +146,6 @@ class Semester:
     def isFullTime(self):
         return self.totalCredits >= 12
 
-
 class Loan:
     '''
         >>> import random
@@ -181,6 +181,7 @@ class Loan:
     def __getloanID(self):
         return random.randrange(10000, 99999)
 
+
 class Person:
     '''
         >>> p1 = Person('Jason Lee', '204-99-2890')
@@ -199,22 +200,21 @@ class Person:
     '''
 
     def __init__(self, name, ssn):
-        # YOUR CODE STARTS HERE
-        pass
+        self.name = name
+        self.ssn = ssn
 
     def __str__(self):
-        # YOUR CODE STARTS HERE
-        pass
+        return f'Person({self.name}, ***-**-{self.ssn[-4:]})'
 
     __repr__ = __str__
 
     def get_ssn(self):
-        # YOUR CODE STARTS HERE
-        pass
+        return self.ssn
 
     def __eq__(self, other):
-        # YOUR CODE STARTS HERE
-        pass
+        if isinstance(other, Person):
+            return self.ssn == other.ssn
+        return False
 
 class Staff(Person):
     '''
@@ -484,4 +484,4 @@ class StudentAccount:
 if __name__=='__main__':
     import doctest
     #doctest.testmod()     # Uncomment this line to run all docstrings
-    doctest.run_docstring_examples(Loan, globals(), name='HW2',verbose=True)   # Replace Course with the name of the class you want to run its doctest
+    doctest.run_docstring_examples(Person, globals(), name='HW2',verbose=True)   # Replace Course with the name of the class you want to run its doctest
