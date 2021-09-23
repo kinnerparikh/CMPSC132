@@ -181,7 +181,6 @@ class Loan:
     def __getloanID(self):
         return random.randrange(10000, 99999)
 
-
 class Person:
     '''
         >>> p1 = Person('Jason Lee', '204-99-2890')
@@ -255,47 +254,57 @@ class Staff(Person):
         {1: CMPSC132}
     '''
     def __init__(self, name, ssn, supervisor=None):
-        # YOUR CODE STARTS HERE
-        pass
+        self.name = name
+        self.ssn = ssn
+        self.supervisor = supervisor
 
 
     def __str__(self):
-        # YOUR CODE STARTS HERE
-        pass
+        return f'Staff({self.name}, {self.id})'
 
     __repr__ = __str__
 
 
     @property
     def id(self):
-        # YOUR CODE STARTS HERE
-        pass
+        retStr = '905'
+        names = self.name.split(' ')
+        for name in names:
+            retStr += name[0].lower()
+        return retStr + self.ssn[-4:]
 
     @property   
     def getSupervisor(self):
-        # YOUR CODE STARTS HERE
-        pass
+        return self.supervisor
 
     def setSupervisor(self, new_supervisor):
-        # YOUR CODE STARTS HERE
-        pass
-
+        if not isinstance(new_supervisor, Staff):
+            return None
+        self.supervisor = new_supervisor
+        return 'Completed!'
 
     def applyHold(self, student):
-        # YOUR CODE STARTS HERE
-        pass
-
+        if not isinstance(student, Student):
+            return None
+        student.hold = True
+        return 'Completed!'
+        
     def removeHold(self, student):
-        # YOUR CODE STARTS HERE
-        pass
+        if not isinstance(student, Student):
+            return None
+        student.hold = False
+        return 'Completed!'
 
     def unenrollStudent(self, student):
-        # YOUR CODE STARTS HERE
-        pass
+        if not isinstance(student, Student):
+            return None
+        student.active = False
+        return 'Completed!'
 
     def createStudent(self, person):
-        # YOUR CODE STARTS HERE
-        pass
+        if not isinstance(person, Person):
+            return None
+        return Student(person.name, person.ssn, 'Freshman')
 
 class Student(Person):
     '''
@@ -352,7 +361,13 @@ class Student(Person):
     '''
     def __init__(self, name, ssn, year):
         random.seed(1)
-        # YOUR CODE STARTS HERE
+        self.name = name
+        self.ssn = ssn
+        self.year = year
+        self.semesters = dict()
+        self.hold = False
+        self.active = True
+        self.account = StudentAccount(self)
 
 
     def __str__(self):
@@ -362,8 +377,10 @@ class Student(Person):
     __repr__ = __str__
 
     def __createStudentAccount(self):
-        # YOUR CODE STARTS HERE
-        pass
+        retStr = ''
+        for name in self.name.split(' '):
+            retStr += name[0].lower()
+        return retStr + self.ssn[-4:]
 
 
     @property
@@ -454,27 +471,27 @@ class StudentAccount:
         >>> s1.account.balance
         7900.0
     '''
-    
-    def __init__(self, student):
-        # YOUR CODE STARTS HERE
-        pass
+    pricePerCredit = 1000
 
+    def __init__(self, student):
+        self.student = student
+        self.balance = 0
+        self.loans = dict()
 
     def __str__(self):
-        # YOUR CODE STARTS HERE
-        pass
+        return f'Name: {self.student.name}\nID: {self.student.id}\nBalance: {self.balance}'
 
     __repr__ = __str__
 
 
     def makePayment(self, amount):
-        # YOUR CODE STARTS HERE
-        pass
+        self.balance -= amount
+        return self.balance
 
 
     def chargeAccount(self, amount):
-        # YOUR CODE STARTS HERE
-        pass
+        self.balance += amount
+        return self.balance
 
 
 
@@ -484,4 +501,4 @@ class StudentAccount:
 if __name__=='__main__':
     import doctest
     #doctest.testmod()     # Uncomment this line to run all docstrings
-    doctest.run_docstring_examples(Person, globals(), name='HW2',verbose=True)   # Replace Course with the name of the class you want to run its doctest
+    doctest.run_docstring_examples(Staff, globals(), name='HW2',verbose=True)   # Replace Course with the name of the class you want to run its doctest
