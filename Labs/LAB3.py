@@ -15,10 +15,15 @@ def get_count(aList, item):
         >>> get_count([1,4,3.5,'1',3.5, 9, 4, 2], 'a') 
         0
     '''
-    ## YOUR CODE STARTS HERE
-    pass
+    if len(aList) == 0: #base case of empty list
+        return aList
+    if aList[0] == item: #checking for instance of item
+        return 1 + get_count(aList[1:], item) #adding one to the count
+    return get_count(aList[1:], item)
 
 
+#Used this resource for this problem
+#https://stackoverflow.com/questions/2022031/python-append-vs-operator-on-lists-why-do-these-give-different-results
 def replace(numList, old, new):
     '''
         >>> input_list = [1, 7, 5.6, 3, 2, 4, 1, 9]
@@ -31,9 +36,11 @@ def replace(numList, old, new):
         >>> replace([1,7, 5.6, 3, 2, 4, 1, 9], 8, 99)    
         [1, 7, 5.6, 3, 2, 4, 1, 9]
     '''
-    ## YOUR CODE STARTS HERE
-    pass
-
+    if len(numList) == 0: #base case for empty list
+        return numList
+    if numList[0] == old: #checking for instance of old
+        return [new] + replace(numList[1:], old, new) #replacing item and performing on rest of list
+    return [numList[0]] + replace(numList[1:], old, new)
 
 def flat(aList):
     '''
@@ -47,9 +54,11 @@ def flat(aList):
         >>> flat([1, [], 3])
         [1, 3]
     '''
-    ## YOUR CODE STARTS HERE
-    pass
-
+    if len(aList) == 0: #base case for empty list
+        return aList
+    if isinstance(aList[0], list): #checking if current instance is list
+        return flat(aList[0]) + flat(aList[1:]) #flatten both the current list and the remaining list
+    return [aList[0]] + flat(aList[1:]) 
 
 def neighbor(n):
     """
@@ -64,5 +73,12 @@ def neighbor(n):
         >>> neighbor(2222466666625)
         24625
     """
-    ## YOUR CODE STARTS HERE
-    pass
+    if n == 0: #base case for n being 0
+        return n
+    if n % 10 == (n // 10) % 10: #checking if the 1s and 10s place are the same
+        return neighbor(n//10) #moving past the current value
+    return n % 10 + 10 * neighbor(n//10) #adding the current value to the next values
+
+if __name__=='__main__':
+    import doctest
+    doctest.run_docstring_examples(neighbor, globals(), name='HW1',verbose=True)
