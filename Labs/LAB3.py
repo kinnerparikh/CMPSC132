@@ -16,7 +16,7 @@ def get_count(aList, item):
         0
     '''
     if len(aList) == 0: #base case of empty list
-        return aList
+        return 0
     if aList[0] == item: #checking for instance of item
         return 1 + get_count(aList[1:], item) #adding one to the count
     return get_count(aList[1:], item)
@@ -81,4 +81,4 @@ def neighbor(n):
 
 if __name__=='__main__':
     import doctest
-    doctest.run_docstring_examples(neighbor, globals(), name='HW1',verbose=True)
+    doctest.run_docstring_examples(get_count, globals(), name='HW1',verbose=True)
