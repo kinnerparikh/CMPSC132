@@ -1,7 +1,6 @@
 # HW2
 # Due Date: 09/24/2021, 11:59PM
 # REMINDER: The work in this assignment must be your own original work and must be completed alone.
-from math import e
 import random
 
 class Course:
@@ -254,8 +253,7 @@ class Staff(Person):
         {1: CMPSC132}
     '''
     def __init__(self, name, ssn, supervisor=None):
-        self.name = name
-        self.ssn = ssn
+        super().__init__(name, ssn)
         self.supervisor = supervisor
 
 
@@ -305,106 +303,6 @@ class Staff(Person):
         if not isinstance(person, Person):
             return None
         return Student(person.name, person.ssn, 'Freshman')
-
-class Student(Person):
-    '''
-        >>> C = Catalog()
-        >>> C.addCourse('CMPSC132', 'Programming in Python II', 3, 400)
-        'Course added successfully'
-        >>> C.addCourse('CMPSC360', 'Discrete Mathematics', 3, 200)
-        'Course added successfully'
-        >>> s1 = Student('Jason Lee', '204-99-2890', 'Freshman')
-        >>> s1
-        Student(Jason Lee, jl2890, Freshman)
-        >>> s2 = Student('Karen Lee', '247-01-2670', 'Freshman')
-        >>> s2
-        Student(Karen Lee, kl2670, Freshman)
-        >>> s1 == s2
-        False
-        >>> s1.id
-        'jl2890'
-        >>> s2.id
-        'kl2670'
-        >>> s1.registerSemester()
-        >>> s1.enrollCourse('CMPSC132', C,1)
-        'Course added successfully'
-        >>> s1.semesters
-        {1: CMPSC132}
-        >>> s1.enrollCourse('CMPSC360', C, 1)
-        'Course added successfully'
-        >>> s1.enrollCourse('CMPSC311', C, 1)
-        'Course not found'
-        >>> s1.semesters
-        {1: CMPSC132, CMPSC360}
-        >>> s2.semesters
-        {}
-        >>> s1.enrollCourse('CMPSC132', C, 1)
-        'Course already enrolled'
-        >>> s1.dropCourse('CMPSC360')
-        'Course dropped successfully'
-        >>> s1.dropCourse('CMPSC360')
-        'Course not found'
-        >>> s1.semesters
-        {1: CMPSC132}
-        >>> s1.registerSemester()
-        >>> s1.semesters
-        {1: CMPSC132, 2: No courses}
-        >>> s1.enrollCourse('CMPSC360', C, 2)
-        'Course added successfully'
-        >>> s1.semesters
-        {1: CMPSC132, 2: CMPSC360}
-        >>> s1.registerSemester()
-        >>> s1.semesters
-        {1: CMPSC132, 2: CMPSC360, 3: No courses}
-        >>> s1
-        Student(Jason Lee, jl2890, Sophomore)
-    '''
-    def __init__(self, name, ssn, year):
-        random.seed(1)
-        self.name = name
-        self.ssn = ssn
-        self.year = year
-        self.semesters = dict()
-        self.hold = False
-        self.active = True
-        self.account = StudentAccount(self)
-
-
-    def __str__(self):
-        # YOUR CODE STARTS HERE
-        pass
-
-    __repr__ = __str__
-
-    def __createStudentAccount(self):
-        retStr = ''
-        for name in self.name.split(' '):
-            retStr += name[0].lower()
-        return retStr + self.ssn[-4:]
-
-
-    @property
-    def id(self):
-        # YOUR CODE STARTS HERE
-        pass
-
-    def registerSemester(self):
-        # YOUR CODE STARTS HERE
-        pass
-
-
-
-    def enrollCourse(self, cid, catalog, semester):
-        # YOUR CODE STARTS HERE
-        pass
-
-    def dropCourse(self, cid):
-        # YOUR CODE STARTS HERE
-        pass
-
-    def getLoan(self, amount):
-        # YOUR CODE STARTS HERE
-        pass
 
 class StudentAccount:
     '''
@@ -471,7 +369,7 @@ class StudentAccount:
         >>> s1.account.balance
         7900.0
     '''
-    pricePerCredit = 1000
+    CREDIT_PRICE = 1000
 
     def __init__(self, student):
         self.student = student
@@ -479,7 +377,7 @@ class StudentAccount:
         self.loans = dict()
 
     def __str__(self):
-        return f'Name: {self.student.name}\nID: {self.student.id}\nBalance: {self.balance}'
+        return f'Name: {self.student.name}\nID: {self.student.id}\nBalance: ${self.balance}'
 
     __repr__ = __str__
 
@@ -488,17 +386,142 @@ class StudentAccount:
         self.balance -= amount
         return self.balance
 
-
     def chargeAccount(self, amount):
         self.balance += amount
         return self.balance
 
+class Student(Person):
+    '''
+        >>> C = Catalog()
+        >>> C.addCourse('CMPSC132', 'Programming in Python II', 3, 400)
+        'Course added successfully'
+        >>> C.addCourse('CMPSC360', 'Discrete Mathematics', 3, 200)
+        'Course added successfully'
+        >>> s1 = Student('Jason Lee', '204-99-2890', 'Freshman')
+        >>> s1
+        Student(Jason Lee, jl2890, Freshman)
+        >>> s2 = Student('Karen Lee', '247-01-2670', 'Freshman')
+        >>> s2
+        Student(Karen Lee, kl2670, Freshman)
+        >>> s1 == s2
+        False
+        >>> s1.id
+        'jl2890'
+        >>> s2.id
+        'kl2670'
+        >>> s1.registerSemester()
+        >>> s1.enrollCourse('CMPSC132', C,1)
+        'Course added successfully'
+        >>> s1.semesters
+        {1: CMPSC132}
+        >>> s1.enrollCourse('CMPSC360', C, 1)
+        'Course added successfully'
+        >>> s1.enrollCourse('CMPSC311', C, 1)
+        'Course not found'
+        >>> s1.semesters
+        {1: CMPSC132, CMPSC360}
+        >>> s2.semesters
+        {}
+        >>> s1.enrollCourse('CMPSC132', C, 1)
+        'Course already enrolled'
+        >>> s1.dropCourse('CMPSC360')
+        'Course dropped successfully'
+        >>> s1.dropCourse('CMPSC360')
+        'Course not found'
+        >>> s1.semesters
+        {1: CMPSC132}
+        >>> s1.registerSemester()
+        >>> s1.semesters
+        {1: CMPSC132, 2: No courses}
+        >>> s1.enrollCourse('CMPSC360', C, 2)
+        'Course added successfully'
+        >>> s1.semesters
+        {1: CMPSC132, 2: CMPSC360}
+        >>> s1.registerSemester()
+        >>> s1.semesters
+        {1: CMPSC132, 2: CMPSC360, 3: No courses}
+        >>> s1
+        Student(Jason Lee, jl2890, Sophomore)
+    '''
+    def __init__(self, name, ssn, year):
+        random.seed(1)
+        super().__init__(name, ssn)
+        self.year = year
+        self.semesters = dict()
+        self.hold = False
+        self.active = True
+        self.account = self.__createStudentAccount()
 
+
+    def __str__(self):
+        return f'Student({self.name}, {self.id}, {self.year})'
+
+    __repr__ = __str__
+
+    def __createStudentAccount(self):
+        if not self.active:
+            return None
+        return StudentAccount(self)
+
+    @property
+    def id(self):
+        retStr = ''
+        for name in self.name.split(' '):
+            retStr += name[0].lower()
+        return retStr + self.ssn[-4:]
+
+    def registerSemester(self):
+        if not self.active or self.hold:
+            return 'Unsuccessful operation'
+        
+        newSem = Semester(len(self.semesters) + 1)
+        self.semesters[newSem.sem_num] = newSem
+
+        if newSem.sem_num < 2:
+            self.year = 'Freshman'
+        elif newSem.sem_num < 4:
+            self.year = 'Sophomore'
+        elif newSem.sem_num < 6:
+            self.year = 'Junior'
+        else:
+            self.year = 'Senior'
+
+
+    def enrollCourse(self, cid, catalog, semester):
+        if not self.active or self.hold:
+            return 'Unsuccessful operation'
+        if cid not in catalog.courseOfferings:
+            return 'Course not found'
+        if cid in self.semesters[semester].courses:
+            return 'Course already enrolled'
+        currCourse = catalog.courseOfferings[cid]
+        self.semesters[semester].addCourse(currCourse[0])
+        self.account.chargeAccount(currCourse[0].credits*StudentAccount.CREDIT_PRICE)
+        return 'Course added successfully'
+
+    def dropCourse(self, cid):
+        if not self.active or self.hold:
+            return 'Unsuccessful operation'
+        catalog = self.semesters[len(self.semesters)].courses
+        if cid not in catalog:
+            return 'Course not found'
+        self.account.makePayment(catalog[cid].credits*StudentAccount.CREDIT_PRICE/2)
+        self.semesters[len(self.semesters)].dropCourse(catalog[cid])
+        return 'Course dropped successfully'
+
+    def getLoan(self, amount):
+        if not self.active:
+            return 'Unsuccessful operation'
+        if not self.semesters[len(self.semesters)].isFullTime:
+            return 'Not full-time'
+        self.account.makePayment(amount)
+        loan = Loan(amount)
+        self.account.loans[loan.loan_id] = loan
 
 
 #############################################################################################
 
 if __name__=='__main__':
     import doctest
-    #doctest.testmod()     # Uncomment this line to run all docstrings
-    doctest.run_docstring_examples(Staff, globals(), name='HW2',verbose=True)   # Replace Course with the name of the class you want to run its doctest
+    doctest.testmod()     # Uncomment this line to run all docstrings
+    #doctest.run_docstring_examples(StudentAccount, globals(), name='HW2',verbose=True)   # Replace Course with the name of the class you want to run its doctest
