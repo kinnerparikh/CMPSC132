@@ -136,10 +136,10 @@ class Person:
 
     def __init__(self, name, ssn):
         self.name = name
-        self.ssn = ssn
+        self.__ssn = ssn
 
     def __str__(self):
-        return f'Person({self.name}, ***-**-{self.ssn[-4:]})'
+        return f'Person({self.name}, ***-**-{self.get_ssn()[-4:]})'
 
     __repr__ = __str__
 
@@ -147,14 +147,14 @@ class Person:
         '''
         Getter method for accessing the private social security number attribute.
         '''
-        return self.ssn
+        return self.__ssn
 
     def __eq__(self, other):
         '''
         Determines if two objects are equal. -> checks only ssn
         '''
         if isinstance(other, Person):
-            return self.ssn == other.ssn
+            return self.get_ssn() == other.get_ssn()
         return False
 
 class Staff(Person):
@@ -179,7 +179,7 @@ class Staff(Person):
         names = self.name.split(' ')
         for name in names:
             retStr += name[0].lower() #adding the initials to the id
-        return retStr + self.ssn[-4:] #concatenating last four ssn digits
+        return retStr + self.get_ssn()[-4:] #concatenating last four ssn digits
 
     @property   
     def getSupervisor(self):
@@ -231,7 +231,7 @@ class Staff(Person):
         '''
         if not isinstance(person, Person):
             return None
-        return Student(person.name, person.ssn, 'Freshman') #creating the new student object
+        return Student(person.name, person.get_ssn(), 'Freshman') #creating the new student object
 
 class StudentAccount:
     '''
@@ -300,7 +300,7 @@ class Student(Person):
         retStr = ''
         for name in self.name.split(' '):
             retStr += name[0].lower() #getting the initials of student
-        return retStr + self.ssn[-4:] #concatenating last four ssn digits
+        return retStr + self.get_ssn()[-4:] #concatenating last four ssn digits
 
     def registerSemester(self):
         '''
