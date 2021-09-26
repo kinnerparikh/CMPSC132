@@ -378,3 +378,9 @@ class Student(Person):
         loan = Loan(amount) #creating the loan object
         self.account.loans[loan.loan_id] = loan #adding loan object to loan dictionary
         self.account.makePayment(amount) #'giving the loan'
+
+jane_doe = Staff('Jane Doe', '214-49-2890')
+p = Person('Jason Smith', '221-11-2629')
+s = jane_doe.createStudent(p)
+
+print(s.year, s.semesters)
