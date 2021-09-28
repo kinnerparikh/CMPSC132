@@ -1,7 +1,7 @@
-def get_lines(n):
-    if n <= 1:
-        return '*'
+def hailstone(num):
+    if num == 1:
+        return [1]
+    elif num % 2 == 0:
+        return [num] + hailstone(num//2)
     else:
-        return get_lines(n - 1) + '\n' + '*'*n
-
-print(get_lines(5))
+        return [num] + hailstone(num*3 + 1)
