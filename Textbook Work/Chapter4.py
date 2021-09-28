@@ -13,6 +13,10 @@ def minMax(aList, min = sys.maxsize, max = -sys.maxsize):
     elif aList[0] < min:
         return minMax(aList[1:], aList[0], max)
     return minMax(aList[1:], min, aList[0])
-
+#4.10
+'''
+Describe a recursive algorithm to compute the integer part of the 
+base-two logarithm of n using only addition and integer division
+'''
 
 print(minMax([1, 4, 8, 1, -1, -6, 344, 999, -9999]))
