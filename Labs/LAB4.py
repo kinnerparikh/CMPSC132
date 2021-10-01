@@ -94,17 +94,16 @@ class SortedLinkedList:
             
 
     def replicate(self):
-        newList = self
-        if newList.head is None:
+        newList = SortedLinkedList()
+        if self.head is None:
             return None
-        curr = newList.head
+        curr = self.head
         while curr is not None:
-            repeat = curr.value - 1
+            repeat = curr.value
             if isinstance(curr.value, float) or curr.value <= 0:
-                repeat = 1
+                repeat = 2
             for i in range(0, repeat):
-                self.add(curr.value)
-                curr = curr.next
+                newList.add(curr.value)
             curr = curr.next
         
         return newList
