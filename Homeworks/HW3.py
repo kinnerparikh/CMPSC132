@@ -57,25 +57,32 @@ class Stack:
 
 
     def isEmpty(self):
-        # YOUR CODE STARTS HERE
-        pass
+        return (self.top is None)
 
     def __len__(self): 
-        # YOUR CODE STARTS HERE
-        pass
+        curr = self.top
+        counter = 0
+        while curr:
+            counter += 1
+            curr = curr.next
+        return counter
 
     def push(self,value):
-        # YOUR CODE STARTS HERE
-        pass
-
+        old = self.top
+        self.top = Node(value)
+        self.top.next = old        
      
     def pop(self):
-        # YOUR CODE STARTS HERE
-        pass
+        if self.isEmpty():
+            return None
+        value = self.top.value
+        self.top = self.top.next
+        return value
 
     def peek(self):
-        # YOUR CODE STARTS HERE
-        pass
+        if self.isEmpty():
+            return None
+        return self.top.value
 
 
 #=============================================== Part II ==============================================
@@ -305,3 +312,8 @@ class AdvancedCalculator:
         calcObj = Calculator()     # method must use calcObj to compute each expression
         # YOUR CODE STARTS HERE
         pass
+
+
+if __name__=='__main__':
+    import doctest
+    doctest.run_docstring_examples(Stack, globals(), name='HW1',verbose=True)
