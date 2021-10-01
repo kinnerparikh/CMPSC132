@@ -113,11 +113,12 @@ class Calculator:
             >>> x._isNumber('2.56p')
             False
         '''
-        # YOUR CODE STARTS HERE
-        pass
-
-
-
+        # Used https://stackoverflow.com/questions/736043/checking-if-a-string-can-be-converted-to-float-in-python
+        try:
+            float(txt)
+            return True
+        except TypeError:
+            return False
 
     def _getPostfix(self, txt):
         '''
@@ -316,4 +317,4 @@ class AdvancedCalculator:
 
 if __name__=='__main__':
     import doctest
-    doctest.run_docstring_examples(Stack, globals(), name='HW1',verbose=True)
+    doctest.run_docstring_examples(Calculator._isNumber, globals(), name='HW1',verbose=True)
