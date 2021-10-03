@@ -63,48 +63,47 @@ class SortedLinkedList:
 
 
     def isEmpty(self):
-        return self.head == None
+        return self.head == None 
 
     def __len__(self):
         count=0
         current=self.head
-        while current:
+        while current: #loop until current is None
             current=current.next
             count+=1
         return count
 
                 
     def add(self, value):
-        #test comment
         newNode = Node(value)
-        if self.head is None:
+        if self.head is None: #empty linked list
             self.head = newNode
             self.tail = newNode
-        elif value <= self.head.value:
+        elif value <= self.head.value: #value is less than head value
             newNode.next = self.head
             self.head = newNode
-        elif value >= self.tail.value:
+        elif value >= self.tail.value: #value is greater than tail value
             self.tail.next = newNode
             self.tail = self.tail.next
         else:
             curr = self.head
-            while curr.next is not None and curr.next.value <= value:
+            while curr.next is not None and curr.next.value <= value: #loop until appropriate   
                 curr = curr.next
             newNode.next = curr.next
             curr.next = newNode
             
 
     def replicate(self):
-        newList = SortedLinkedList()
-        if self.head is None:
+        newList = SortedLinkedList() #create a new list
+        if self.head is None: #empty list condition
             return None
         curr = self.head
-        while curr is not None:
+        while curr is not None: #looping till end of list
             repeat = curr.value
-            if isinstance(curr.value, float) or curr.value <= 0:
+            if isinstance(curr.value, float) or curr.value <= 0: #float or negative case
                 repeat = 2
             for i in range(0, repeat):
-                newList.add(curr.value)
+                newList.add(curr.value) #adding to new list
             curr = curr.next
         
         return newList
@@ -112,8 +111,8 @@ class SortedLinkedList:
 
     def removeDuplicates(self):
         curr = self.head
-        while curr is not None:
-            while curr.next is not None and curr.value == curr.next.value:
+        while curr is not None: #looping till end of list
+            while curr.next is not None and curr.value == curr.next.value: #removing duplicates
                 curr.next = curr.next.next
             curr = curr.next
 
