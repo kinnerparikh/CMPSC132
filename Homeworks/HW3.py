@@ -159,9 +159,7 @@ class Calculator:
             >>> x._getPostfix('2 * 5% + 3 ^ + -2 + 1 + 4')
         '''
 
-        # YOUR CODE STARTS HERE
-        postfixStack = Stack()  # method must use postfixStack to compute the postfix expression
-        pass
+        # YOUR CODE STARTS HERE        pass
 
 
     @property
