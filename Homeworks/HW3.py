@@ -117,27 +117,29 @@ class Calculator:
         try:
             float(txt)
             return True
-        except TypeError:
+        except Exception as e:
             return False
 
     def _getPostfix(self, txt):
         '''
+            
             Required: _getPostfix must create and use a Stack for expression processing
             >>> x=Calculator()
-            >>> x._getPostfix('2 ^ 4')
-            '2.0 4.0 ^'
-            >>> x._getPostfix('2')
-            '2.0'
-            >>> x._getPostfix('2.1 * 5 + 3 ^ 2 + 1 + 4.45')
-            '2.1 5.0 * 3.0 2.0 ^ + 1.0 + 4.45 +'
-            >>> x._getPostfix('2 * 5.34 + 3 ^ 2 + 1 + 4')
-            '2.0 5.34 * 3.0 2.0 ^ + 1.0 + 4.0 +'
-            >>> x._getPostfix('2.1 * 5 + 3 ^ 2 + 1 + 4')
-            '2.1 5.0 * 3.0 2.0 ^ + 1.0 + 4.0 +'
-            >>> x._getPostfix('( 2.5 )')
-            '2.5'
-            >>> x._getPostfix ('( ( 2 ) )')
-            '2.0'
+
+            # >>> x._getPostfix('2 ^ 4')
+            # '2.0 4.0 ^'
+            # >>> x._getPostfix('2')
+            # '2.0'
+            # >>> x._getPostfix('2.1 * 5 + 3 ^ 2 + 1 + 4.45')
+            # '2.1 5.0 * 3.0 2.0 ^ + 1.0 + 4.45 +'
+            # >>> x._getPostfix('2 * 5.34 + 3 ^ 2 + 1 + 4')
+            # '2.0 5.34 * 3.0 2.0 ^ + 1.0 + 4.0 +'
+            # >>> x._getPostfix('2.1 * 5 + 3 ^ 2 + 1 + 4')
+            # '2.1 5.0 * 3.0 2.0 ^ + 1.0 + 4.0 +'
+            # >>> x._getPostfix('( 2.5 )')
+            # '2.5'
+            # >>> x._getPostfix ('( ( 2 ) )')
+            # '2.0'
             >>> x._getPostfix ('2 * ( ( 5 + -3 ) ^ 2 + ( 1 + 4 ) )')
             '2.0 5.0 -3.0 + 2.0 ^ 1.0 4.0 + + *'
             >>> x._getPostfix ('( 2 * ( ( 5 + 3 ) ^ 2 + ( 1 + 4 ) ) )')
@@ -158,8 +160,40 @@ class Calculator:
             >>> x._getPostfix(' 2 * ( 5 + 3 ) ^ 2 + ) 1 + 4 (')
             >>> x._getPostfix('2 * 5% + 3 ^ + -2 + 1 + 4')
         '''
+        orderOfOp = {"^": 3, "*": 2, "/": 2, "+": 1, "-": 1}
+        operators = orderOfOp.keys()
+        postfix = ''
+        s = Stack()
 
-        # YOUR CODE STARTS HERE        pass
+        tokens = txt.split(' ')
+        # invalid starting and ending value
+        if tokens[-1] in operators or tokens[0] in operators:
+            return None
+
+        pCounter = 0
+        # running through the expression
+        for index in range(0, len(tokens)):
+            currToken = tokens[index]
+            if currToken in operators:
+                if tokens[index + 1] in operators:
+                    return None
+                while(not s.isEmpty() and s.peek() != "(" and orderOfOp[s.peek()] >= orderOfOp[currToken]):
+                    postfix += s.pop() + " "
+            elif self._isNumber(currToken):
+                postfix += str(float(currToken)) + " "
+            elif currToken == "(":
+                s.push(currToken)
+                pCounter += 1
+            elif currToken == ")":
+                while not s.isEmpty() and s.peek() != '(':
+                    postfix += s.pop() + " "
+            elif not self._isNumber(currToken):
+                return None
+
+        while not s.isEmpty() and s.peek() != '(':
+            postfix += s.pop() + " "
+        
+        return postfix.strip()
 
 
     @property
@@ -196,7 +230,7 @@ class Calculator:
             >>> x.setExpr('2 * ( 4 + 2 * ( 5 - 3 ^ 2 ) + 1 ) + 4')
             >>> x.calculate
             -2.0
-            >>> x.setExpr(' 2.5 + 3 * ( 2 + ( 3.0 ) * ( 5 ^ 2 - 2 * 3 ^ ( 2 ) ) * ( 4 ) ) * ( 2 / 8 + 2 * ( 3 - 1 / 3 ) ) - 2 / 3 ^ 2')
+            >>> x.setExpr(' 2.5 + 3 * ( 2 + ( 3.0 ) * ( 5 ^ 2 - 2 * 3 ^ ( 2 ) ) * ( 4 ) )   n* ( 2 / 8 + 2 * ( 3 - 1 / 3 ) ) - 2 / 3 ^ 2')
             >>> x.calculate
             1442.7777777777778
             
@@ -315,4 +349,4 @@ class AdvancedCalculator:
 
 if __name__=='__main__':
     import doctest
-    doctest.run_docstring_examples(Calculator._isNumber, globals(), name='HW1',verbose=True)
+    doctest.run_docstring_examples(Calculator._getPostfix, globals(), name='HW1',verbose=True)
