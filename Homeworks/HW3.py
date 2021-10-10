@@ -179,6 +179,7 @@ class Calculator:
                     return None
                 while(not s.isEmpty() and s.peek() != "(" and orderOfOp[s.peek()] >= orderOfOp[currToken]):
                     postfix += s.pop() + " "
+                s.push(currToken)
             elif self._isNumber(currToken):
                 postfix += str(float(currToken)) + " "
             elif currToken == "(":
@@ -187,11 +188,13 @@ class Calculator:
             elif currToken == ")":
                 while not s.isEmpty() and s.peek() != '(':
                     postfix += s.pop() + " "
+                s.pop()
             elif not self._isNumber(currToken):
                 return None
 
         while not s.isEmpty() and s.peek() != '(':
             postfix += s.pop() + " "
+
         
         return postfix.strip()
 
