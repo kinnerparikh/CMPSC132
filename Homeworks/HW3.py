@@ -126,20 +126,20 @@ class Calculator:
             Required: _getPostfix must create and use a Stack for expression processing
             >>> x=Calculator()
 
-            # >>> x._getPostfix('2 ^ 4')
-            # '2.0 4.0 ^'
-            # >>> x._getPostfix('2')
-            # '2.0'
-            # >>> x._getPostfix('2.1 * 5 + 3 ^ 2 + 1 + 4.45')
-            # '2.1 5.0 * 3.0 2.0 ^ + 1.0 + 4.45 +'
-            # >>> x._getPostfix('2 * 5.34 + 3 ^ 2 + 1 + 4')
-            # '2.0 5.34 * 3.0 2.0 ^ + 1.0 + 4.0 +'
-            # >>> x._getPostfix('2.1 * 5 + 3 ^ 2 + 1 + 4')
-            # '2.1 5.0 * 3.0 2.0 ^ + 1.0 + 4.0 +'
-            # >>> x._getPostfix('( 2.5 )')
-            # '2.5'
-            # >>> x._getPostfix ('( ( 2 ) )')
-            # '2.0'
+            >>> x._getPostfix('2 ^ 4')
+            '2.0 4.0 ^'
+            >>> x._getPostfix('2')
+            '2.0'
+            >>> x._getPostfix('2.1 * 5 + 3 ^ 2 + 1 + 4.45')
+            '2.1 5.0 * 3.0 2.0 ^ + 1.0 + 4.45 +'
+            >>> x._getPostfix('2 * 5.34 + 3 ^ 2 + 1 + 4')
+            '2.0 5.34 * 3.0 2.0 ^ + 1.0 + 4.0 +'
+            >>> x._getPostfix('2.1 * 5 + 3 ^ 2 + 1 + 4')
+            '2.1 5.0 * 3.0 2.0 ^ + 1.0 + 4.0 +'
+            >>> x._getPostfix('( 2.5 )')
+            '2.5'
+            >>> x._getPostfix ('( ( 2 ) )')
+            '2.0'
             >>> x._getPostfix ('2 * ( ( 5 + -3 ) ^ 2 + ( 1 + 4 ) )')
             '2.0 5.0 -3.0 + 2.0 ^ 1.0 4.0 + + *'
             >>> x._getPostfix ('( 2 * ( ( 5 + 3 ) ^ 2 + ( 1 + 4 ) ) )')
@@ -159,21 +159,26 @@ class Calculator:
             >>> x._getPostfix(' 2 * ( 5 + 3 ) ^ 2 + ( 1 + 4 ')
             >>> x._getPostfix(' 2 * ( 5 + 3 ) ^ 2 + ) 1 + 4 (')
             >>> x._getPostfix('2 * 5% + 3 ^ + -2 + 1 + 4')
+            >>> x._getPostfix('3 ( 3 )')
         '''
         orderOfOp = {"^": 3, "*": 2, "/": 2, "+": 1, "-": 1}
         operators = orderOfOp.keys()
         postfix = ''
         s = Stack()
 
-        tokens = txt.split(' ')
+        tokens = txt.split()
         # invalid starting and ending value
         if tokens[-1] in operators or tokens[0] in operators:
             return None
 
-        pCounter = 0
+        numParen = 0
+        prevToken = ''
         # running through the expression
         for index in range(0, len(tokens)):
+            if numParen < 0:
+                return None
             currToken = tokens[index]
+                
             if currToken in operators:
                 if tokens[index + 1] in operators:
                     return None
@@ -181,16 +186,27 @@ class Calculator:
                     postfix += s.pop() + " "
                 s.push(currToken)
             elif self._isNumber(currToken):
+                if index + 1 != len(tokens):
+                    if tokens[index + 1] == '(' or self._isNumber(tokens[index + 1]):
+                        return None
                 postfix += str(float(currToken)) + " "
             elif currToken == "(":
+                numParen += 1
                 s.push(currToken)
-                pCounter += 1
             elif currToken == ")":
+                if index + 1 != len(tokens):
+                    if tokens[index + 1] == '(':
+                        return None
+                numParen -= 1
                 while not s.isEmpty() and s.peek() != '(':
                     postfix += s.pop() + " "
                 s.pop()
             elif not self._isNumber(currToken):
                 return None
+            prevToken = currToken
+                
+        if numParen < 0:
+            return None
 
         while not s.isEmpty() and s.peek() != '(':
             postfix += s.pop() + " "
@@ -206,55 +222,57 @@ class Calculator:
             calculate must create and use a Stack to compute the final result as shown in the video lecture
             
             >>> x=Calculator()
-            >>> x.setExpr('4 + 3 - 2')
-            >>> x.calculate
-            5.0
-            >>> x.setExpr('-2 + 3.5')
-            >>> x.calculate
-            1.5
-            >>> x.setExpr('4 + 3.65 - 2 / 2')
-            >>> x.calculate
-            6.65
-            >>> x.setExpr('23 / 12 - 223 + 5.25 * 4 * 3423')
-            >>> x.calculate
-            71661.91666666667
-            >>> x.setExpr(' 2 - 3 * 4')
-            >>> x.calculate
-            -10.0
+
+            # >>> x.setExpr('4 + 3 - 2')
+            # >>> x.calculate
+            # 5.0
+            # >>> x.setExpr('-2 + 3.5')
+            # >>> x.calculate
+            # 1.5
+            # >>> x.setExpr('4 + 3.65 - 2 / 2')
+            # >>> x.calculate
+            # 6.65
+            # >>> x.setExpr('23 / 12 - 223 + 5.25 * 4 * 3423')
+            # >>> x.calculate
+            # 71661.91666666667
+            # >>> x.setExpr(' 2 - 3 * 4')
+            # >>> x.calculate
+            # -10.0
             >>> x.setExpr('7 ^ 2 ^ 3')
             >>> x.calculate
             5764801.0
-            >>> x.setExpr(' 3 * ( ( ( 10 - 2 * 3 ) ) )')
-            >>> x.calculate
-            12.0
-            >>> x.setExpr('8 / 4 * ( 3 - 2.45 * ( 4 - 2 ^ 3 ) ) + 3')
-            >>> x.calculate
-            28.6
-            >>> x.setExpr('2 * ( 4 + 2 * ( 5 - 3 ^ 2 ) + 1 ) + 4')
-            >>> x.calculate
-            -2.0
-            >>> x.setExpr(' 2.5 + 3 * ( 2 + ( 3.0 ) * ( 5 ^ 2 - 2 * 3 ^ ( 2 ) ) * ( 4 ) )   n* ( 2 / 8 + 2 * ( 3 - 1 / 3 ) ) - 2 / 3 ^ 2')
-            >>> x.calculate
-            1442.7777777777778
-            
 
-            # In invalid expressions, you might print an error message, but code must return None, adjust doctest accordingly
-            >>> x.setExpr(" 4 + + 3 + 2") 
-            >>> x.calculate
-            >>> x.setExpr("4  3 + 2")
-            >>> x.calculate
-            >>> x.setExpr('( 2 ) * 10 - 3 * ( 2 - 3 * 2 ) )')
-            >>> x.calculate
-            >>> x.setExpr('( 2 ) * 10 - 3 * / ( 2 - 3 * 2 )')
-            >>> x.calculate
-            >>> x.setExpr(' ) 2 ( * 10 - 3 * ( 2 - 3 * 2 ) ')
-            >>> x.calculate
-            >>> x.setExpr('( 3.5 ) ( 15 )') 
-            >>> x.calculate
-            >>> x.setExpr('3 ( 5 ) - 15 + 85 ( 12 )') 
-            >>> x.calculate
-            >>> x.setExpr("( -2 / 6 ) + ( 5 ( ( 9.4 ) ) )") 
-            >>> x.calculate
+            # >>> x.setExpr(' 3 * ( ( ( 10 - 2 * 3 ) ) )')
+            # >>> x.calculate
+            # 12.0
+            # >>> x.setExpr('8 / 4 * ( 3 - 2.45 * ( 4 - 2 ^ 3 ) ) + 3')
+            # >>> x.calculate
+            # 28.6
+            # >>> x.setExpr('2 * ( 4 + 2 * ( 5 - 3 ^ 2 ) + 1 ) + 4')
+            # >>> x.calculate
+            # -2.0
+            # >>> x.setExpr(' 2.5 + 3 * ( 2 + ( 3.0 ) * ( 5 ^ 2 - 2 * 3 ^ ( 2 ) ) * ( 4 ) )   * ( 2 / 8 + 2 * ( 3 - 1 / 3 ) ) - 2 / 3 ^ 2')
+            # >>> x.calculate
+            # 1442.7777777777778
+            # 
+            # 
+            # # In invalid expressions, you might print an error message, but code must return None, adjust doctest accordingly
+            # >>> x.setExpr(" 4 + + 3 + 2") 
+            # >>> x.calculate
+            # >>> x.setExpr("4  3 + 2")
+            # >>> x.calculate
+            # >>> x.setExpr('( 2 ) * 10 - 3 * ( 2 - 3 * 2 ) )')
+            # >>> x.calculate
+            # >>> x.setExpr('( 2 ) * 10 - 3 * / ( 2 - 3 * 2 )')
+            # >>> x.calculate
+            # >>> x.setExpr(' ) 2 ( * 10 - 3 * ( 2 - 3 * 2 ) ')
+            # >>> x.calculate
+            # >>> x.setExpr('( 3.5 ) ( 15 )') 
+            # >>> x.calculate
+            # >>> x.setExpr('3 ( 5 ) - 15 + 85 ( 12 )') 
+            # >>> x.calculate
+            # >>> x.setExpr("( -2 / 6 ) + ( 5 ( ( 9.4 ) ) )") 
+            # >>> x.calculate
         '''
 
         if not isinstance(self.__expr,str) or len(self.__expr)<=0:
@@ -263,8 +281,30 @@ class Calculator:
 
         calcStack = Stack()   # method must use calcStack to compute the  expression
 
-        # YOUR CODE STARTS HERE
-        pass
+        postFix = self._getPostfix(self.__expr)
+        if postFix == None:
+            #print('Error')
+            return None
+        postFixExpr = postFix.split()
+
+        for op in postFixExpr:
+            if self._isNumber(op):
+                calcStack.push(float(op))
+            else:
+                if op == '^':
+                    calcStack.push(calcStack.pop()** calcStack.pop())
+                elif op == '*':
+                    calcStack.push(calcStack.pop() * calcStack.pop())
+                elif op == '/':
+                    calcStack.push((calcStack.pop() / calcStack.pop()) ** -1)
+                elif op == '+':
+                    calcStack.push(calcStack.pop() + calcStack.pop())
+                elif op == '-':
+                    calcStack.push(-calcStack.pop() + calcStack.pop())
+        
+        return calcStack.pop()
+                
+
 
 #=============================================== Part III ==============================================
 
@@ -352,4 +392,4 @@ class AdvancedCalculator:
 
 if __name__=='__main__':
     import doctest
-    doctest.run_docstring_examples(Calculator._getPostfix, globals(), name='HW1',verbose=True)
+    doctest.run_docstring_examples(Calculator.calculate, globals(), name='HW1',verbose=True)
