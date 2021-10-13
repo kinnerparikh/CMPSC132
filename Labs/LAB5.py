@@ -105,44 +105,56 @@ class BinarySearchTree:
             return newTree
         
 
-
-
-
     def isEmpty(self):
-        # YOUR CODE STARTS HERE
-        pass
-
-
+        return self.root == None
 
     def _mirrorHelper(self, node):
-        # YOUR CODE STARTS HERE
-        pass
+        if node is None:
+            return None
+        
+        temp = node.left
+        node.left = node.right
+        node.right = temp
 
+        self._mirrorHelper(node.left)
+        self._mirrorHelper(node.right)
 
+        return Node
 
     @property
     def getMin(self): 
-        # YOUR CODE STARTS HERE
-        pass
-
-
+        temp = self.root
+        while temp.left is not None:
+            temp = temp.left
+        return temp
 
     @property
     def getMax(self): 
-        # YOUR CODE STARTS HERE
-        pass
-
-
+        temp = self.root
+        while temp.right is not None:
+            temp = temp.right
+        return temp
 
     def __contains__(self,value):
-        # YOUR CODE STARTS HERE
-        pass
-
-
+        return False if self.root is None else self._contains(self.root, value)
+    
+    def _contains(self, top, value):
+        if top.value == value:
+            return True
+        if value < top.value and top.left is not None and self._contains(top.left, value):
+            return True
+        if value > top.value and top.right is not None and self._contains(top.right, value):
+            return True
+        return False
 
     def getHeight(self, node):
-        # YOUR CODE STARTS HERE
-        pass
+        if node is None: return -1
+        left = self.getHeight(node.left)
+        right = self.getHeight(node.right)
+
+        return left + 1 if left > right else right + 1
 
 
-
+if __name__=='__main__':
+    import doctest
+    doctest.run_docstring_examples(BinarySearchTree, globals(), name='HW1',verbose=True)

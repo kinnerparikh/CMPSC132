@@ -43,30 +43,30 @@ class BinarySearchTree:
         if current is None:
             return None 
         if current.value > value:
-            _____________________________________________ #[1]
+            self._deleteHelper(current, current.left, value) #[1] goes to the right
         elif current.value < value:
-            _____________________________________________ #[2]
+            self._deleteHelper(current, current.right, value) #[2] goes to the left
         else:
             node_children = self.numChildren(current)
             if node_children == 0 or node_children == 1:
                 if current.left is not None:
-                    child = ______________________ #[3]
+                    child = current.left #[3]
                 else:
-                    child = ______________________ #[4]
+                    child = current.right #[4]
                 if (parent is not None) and (parent.left is current):
-                    _____________________________________________ #[5]
+                    parent.left = child #[5]
                 elif (parent is not None) and (parent.right is current):
-                    _____________________________________________ #[6]
+                    parent.right = child #[6]
                 else:
-                    _____________________________________________ #[7]
+                    self.root = child #[7]
             else:
                 temp = current.right
                 parent = current
                 while temp.left is not None: 
-                    _____________________________________________ #[8]
-                    _____________________________________________ #[9]
-                current.value = _____________________________________________ #[10]
-                self._deleteHelper(______________, _____________, _____________) #[11]
+                    parent = temp #[8]
+                    temp = temp.left #[9]
+                current.value = temp.value #[10]
+                self._deleteHelper(parent, temp, temp.value) #[11]
 
     @property
     def printInorder(self):
@@ -88,13 +88,3 @@ class BinarySearchTree:
         if node_object.right is not None:
             num += 1
         return num
-    
-bst_keys = [3, 2, 5, 4, 9, 3.5, 6]
-t = BinarySearchTree()
-for key in bst_keys:
-    t.insert(key)
-
-print(t.numChildren(t.root))              # Displays 2
-print(t.numChildren(t.root.left))         # Displays 0
-print(t.numChildren(t.root.right))        # Displays 2
-print(t.numChildren(t.root.right.right))  # Displays 1
