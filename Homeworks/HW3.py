@@ -172,7 +172,6 @@ class Calculator:
             return None
 
         numParen = 0
-        prevToken = ''
         # running through the expression
         for index in range(0, len(tokens)):
             if numParen < 0:
@@ -183,6 +182,8 @@ class Calculator:
                 if tokens[index + 1] in operators:
                     return None
                 while(not s.isEmpty() and s.peek() != "(" and orderOfOp[s.peek()] >= orderOfOp[currToken]):
+                    if currToken == '^' and s.peek() == '^': #special case for consecutive exponents
+                        break
                     postfix += s.pop() + " "
                 s.push(currToken)
             elif self._isNumber(currToken):
@@ -203,7 +204,6 @@ class Calculator:
                 s.pop()
             elif not self._isNumber(currToken):
                 return None
-            prevToken = currToken
                 
         if numParen < 0:
             return None
@@ -223,56 +223,55 @@ class Calculator:
             
             >>> x=Calculator()
 
-            # >>> x.setExpr('4 + 3 - 2')
-            # >>> x.calculate
-            # 5.0
-            # >>> x.setExpr('-2 + 3.5')
-            # >>> x.calculate
-            # 1.5
-            # >>> x.setExpr('4 + 3.65 - 2 / 2')
-            # >>> x.calculate
-            # 6.65
-            # >>> x.setExpr('23 / 12 - 223 + 5.25 * 4 * 3423')
-            # >>> x.calculate
-            # 71661.91666666667
-            # >>> x.setExpr(' 2 - 3 * 4')
-            # >>> x.calculate
-            # -10.0
+            >>> x.setExpr('4 + 3 - 2')
+            >>> x.calculate
+            5.0
+            >>> x.setExpr('-2 + 3.5')
+            >>> x.calculate
+            1.5
+            >>> x.setExpr('4 + 3.65 - 2 / 2')
+            >>> x.calculate
+            6.65
+            >>> x.setExpr('23 / 12 - 223 + 5.25 * 4 * 3423')
+            >>> x.calculate
+            71661.91666666667
+            >>> x.setExpr(' 2 - 3 * 4')
+            >>> x.calculate
+            -10.0
             >>> x.setExpr('7 ^ 2 ^ 3')
             >>> x.calculate
             5764801.0
-
-            # >>> x.setExpr(' 3 * ( ( ( 10 - 2 * 3 ) ) )')
-            # >>> x.calculate
-            # 12.0
-            # >>> x.setExpr('8 / 4 * ( 3 - 2.45 * ( 4 - 2 ^ 3 ) ) + 3')
-            # >>> x.calculate
-            # 28.6
-            # >>> x.setExpr('2 * ( 4 + 2 * ( 5 - 3 ^ 2 ) + 1 ) + 4')
-            # >>> x.calculate
-            # -2.0
-            # >>> x.setExpr(' 2.5 + 3 * ( 2 + ( 3.0 ) * ( 5 ^ 2 - 2 * 3 ^ ( 2 ) ) * ( 4 ) )   * ( 2 / 8 + 2 * ( 3 - 1 / 3 ) ) - 2 / 3 ^ 2')
-            # >>> x.calculate
-            # 1442.7777777777778
-            # 
-            # 
-            # # In invalid expressions, you might print an error message, but code must return None, adjust doctest accordingly
-            # >>> x.setExpr(" 4 + + 3 + 2") 
-            # >>> x.calculate
-            # >>> x.setExpr("4  3 + 2")
-            # >>> x.calculate
-            # >>> x.setExpr('( 2 ) * 10 - 3 * ( 2 - 3 * 2 ) )')
-            # >>> x.calculate
-            # >>> x.setExpr('( 2 ) * 10 - 3 * / ( 2 - 3 * 2 )')
-            # >>> x.calculate
-            # >>> x.setExpr(' ) 2 ( * 10 - 3 * ( 2 - 3 * 2 ) ')
-            # >>> x.calculate
-            # >>> x.setExpr('( 3.5 ) ( 15 )') 
-            # >>> x.calculate
-            # >>> x.setExpr('3 ( 5 ) - 15 + 85 ( 12 )') 
-            # >>> x.calculate
-            # >>> x.setExpr("( -2 / 6 ) + ( 5 ( ( 9.4 ) ) )") 
-            # >>> x.calculate
+            >>> x.setExpr(' 3 * ( ( ( 10 - 2 * 3 ) ) )')
+            >>> x.calculate
+            12.0
+            >>> x.setExpr('8 / 4 * ( 3 - 2.45 * ( 4 - 2 ^ 3 ) ) + 3')
+            >>> x.calculate
+            28.6
+            >>> x.setExpr('2 * ( 4 + 2 * ( 5 - 3 ^ 2 ) + 1 ) + 4')
+            >>> x.calculate
+            -2.0
+            >>> x.setExpr(' 2.5 + 3 * ( 2 + ( 3.0 ) * ( 5 ^ 2 - 2 * 3 ^ ( 2 ) ) * ( 4 ) )   * ( 2 / 8 + 2 * ( 3 - 1 / 3 ) ) - 2 / 3 ^ 2')
+            >>> x.calculate
+            1442.7777777777778
+            
+            
+            # In invalid expressions, you might print an error message, but code must return None, adjust doctest accordingly
+            >>> x.setExpr(" 4 + + 3 + 2") 
+            >>> x.calculate
+            >>> x.setExpr("4  3 + 2")
+            >>> x.calculate
+            >>> x.setExpr('( 2 ) * 10 - 3 * ( 2 - 3 * 2 ) )')
+            >>> x.calculate
+            >>> x.setExpr('( 2 ) * 10 - 3 * / ( 2 - 3 * 2 )')
+            >>> x.calculate
+            >>> x.setExpr(' ) 2 ( * 10 - 3 * ( 2 - 3 * 2 ) ')
+            >>> x.calculate
+            >>> x.setExpr('( 3.5 ) ( 15 )') 
+            >>> x.calculate
+            >>> x.setExpr('3 ( 5 ) - 15 + 85 ( 12 )') 
+            >>> x.calculate
+            >>> x.setExpr("( -2 / 6 ) + ( 5 ( ( 9.4 ) ) )") 
+            >>> x.calculate
         '''
 
         if not isinstance(self.__expr,str) or len(self.__expr)<=0:
@@ -291,16 +290,18 @@ class Calculator:
             if self._isNumber(op):
                 calcStack.push(float(op))
             else:
+                num2 = calcStack.pop()
+                num1 = calcStack.pop()
                 if op == '^':
-                    calcStack.push(calcStack.pop()** calcStack.pop())
+                    calcStack.push(num1 ** num2)
                 elif op == '*':
-                    calcStack.push(calcStack.pop() * calcStack.pop())
+                    calcStack.push(num1 * num2)
                 elif op == '/':
-                    calcStack.push((calcStack.pop() / calcStack.pop()) ** -1)
+                    calcStack.push(num1 / num2)
                 elif op == '+':
-                    calcStack.push(calcStack.pop() + calcStack.pop())
+                    calcStack.push(num1 + num2)
                 elif op == '-':
-                    calcStack.push(-calcStack.pop() + calcStack.pop())
+                    calcStack.push(num1 - num2)
         
         return calcStack.pop()
                 
@@ -363,8 +364,7 @@ class AdvancedCalculator:
             >>> C._isVariable('vol%2')
             False
         '''
-        # YOUR CODE STARTS HERE
-        pass
+        return not word.isnum() and word.isalnum() and word in self.states
        
 
     def _replaceVariables(self, expr):
@@ -379,7 +379,11 @@ class AdvancedCalculator:
             >>> C._replaceVariables('x2 - x1')
             '28.0 - 23.0'
         '''
-        # YOUR CODE STARTS HERE
+        tokens = expr.split(' ')
+
+        for i in range(0, len(tokens)):
+            if self._isVariable(tokens[i]):
+                tokens[i] = self.states[tokens[i]]
         pass
 
     
