@@ -113,13 +113,10 @@ class BinarySearchTree:
             return None
         
         temp = node.left
-        node.left = node.right
-        node.right = temp
-
-        self._mirrorHelper(node.left)
-        self._mirrorHelper(node.right)
-
-        return Node
+        node.left = self._mirrorHelper(node.right)
+        node.right = self._mirrorHelper(temp)
+        
+        return node
 
     @property
     def getMin(self): 
