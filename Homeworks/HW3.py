@@ -351,7 +351,7 @@ class AdvancedCalculator:
         True
         >>> C.states == {'A': 20.0, 'B': 10.0, 'C': 11.0, 'D': 41.0}
         True
-        >>> C.setExpression('A = 1;B = A + 9;2C = A + B;A = 20;D = A + B + C;return D + A')
+        >>> C.setExpression('A = 1;B = A + 9;2C = A + B;A = 20;D = A + B + C; return D + A')
         >>> C.calculateExpressions() is None
         True
         >>> C.states == {}
@@ -411,7 +411,7 @@ class AdvancedCalculator:
         retDict = dict()
 
         for exp in expArr: # run through parts
-            if exp[:6] == 'return': #checking if return statement
+            if exp.trim()[:6] == 'return': #checking if return statement
                 replExp = self._replaceVariables(exp[6:])
                 if replExp is None: # illegal statement
                     self.states = {}
