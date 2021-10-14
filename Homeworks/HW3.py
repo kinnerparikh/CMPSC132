@@ -407,9 +407,30 @@ class AdvancedCalculator:
         self.states = {} 
         calcObj = Calculator()     # method must use calcObj to compute each expression
         
-        
+        expArr = self.expressions.split(';') # split into separate parts
+        retDict = dict()
 
+        for exp in expArr: # run through parts
+            if exp[:6] == 'return': #checking if return statement
+                replExp = self._replaceVariables(exp[6:])
+                if replExp is None: # illegal statement
+                    self.states = {}
+                    return None
+                calcObj.setExpr(replExp)
+                retDict['_return_'] = calcObj.calculate
+            else: 
+                currExp = exp.split('=')
+                replExp = self._replaceVariables(currExp[1])
+                if replExp is None: # illegal statement
+                    self.states = {}
+                    return None
+
+                calcObj.setExpr(replExp)
+                self.states[currExp[0].strip()] = calcObj.calculate # setting state to value
+                retDict[exp] = self.states.copy() # dict is mutable, so set copy to retDict
+        
+        return retDict
 
 if __name__=='__main__':
     import doctest
-    doctest.run_docstring_examples(AdvancedCalculator._replaceVariables, globals(), name='HW3',verbose=True)
+    doctest.run_docstring_examples(AdvancedCalculator, globals(), name='HW3',verbose=True)
