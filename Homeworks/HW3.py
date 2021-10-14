@@ -411,8 +411,8 @@ class AdvancedCalculator:
         retDict = dict()
 
         for exp in expArr: # run through parts
-            if exp.trim()[:6] == 'return': #checking if return statement
-                replExp = self._replaceVariables(exp[6:])
+            if exp.strip()[:6] == 'return': #checking if return statement
+                replExp = self._replaceVariables(exp.strip()[6:])
                 if replExp is None: # illegal statement
                     self.states = {}
                     return None
