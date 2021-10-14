@@ -57,32 +57,48 @@ class Stack:
 
 
     def isEmpty(self):
-        return (self.top is None)
+        '''
+        Tests to see whether this stack is empty or not.
+        '''
+        return self.top is None
 
-    def __len__(self): 
+    def __len__(self):
+        '''
+        Returns the number of elements in this stack.
+        '''
         curr = self.top
         counter = 0
-        while curr:
+        while curr: #loop until curr is None
             counter += 1
             curr = curr.next
         return counter
 
     def push(self,value):
+        '''
+        Adds a new node with value=item to the top of the stack
+        Nothing is returned by this method.
+        '''
         old = self.top
         self.top = Node(value)
         self.top.next = old        
      
     def pop(self):
+        '''
+        Removes the top node from the stack and returns that
+        node’s value(not the Node object).
+        '''
         if self.isEmpty():
             return None
         value = self.top.value
-        self.top = self.top.next
+        self.top = self.top.next # move the pointer to the next Node
         return value
 
     def peek(self):
-        if self.isEmpty():
-            return None
-        return self.top.value
+        '''
+        Returns the value (not the Node object) of the 
+        top most node of the stack, but it is not removed.
+        '''
+        return None if self.isEmpty() else self.top.value
 
 
 #=============================================== Part II ==============================================
@@ -105,6 +121,8 @@ class Calculator:
 
     def _isNumber(self, txt):
         '''
+            Returns True if txt is a string that can be converted to a float, False otherwise.
+
             >>> x=Calculator()
             >>> x._isNumber(' 2.560 ')
             True
@@ -122,6 +140,7 @@ class Calculator:
 
     def _getPostfix(self, txt):
         '''
+            Converts an expression from infix to postfix
             
             Required: _getPostfix must create and use a Stack for expression processing
             >>> x=Calculator()
@@ -161,57 +180,56 @@ class Calculator:
             >>> x._getPostfix('2 * 5% + 3 ^ + -2 + 1 + 4')
             >>> x._getPostfix('3 ( 3 )')
         '''
-        orderOfOp = {"^": 3, "*": 2, "/": 2, "+": 1, "-": 1}
-        operators = orderOfOp.keys()
-        postfix = ''
+        orderOfOp = {"^": 3, "*": 2, "/": 2, "+": 1, "-": 1} # dict to keep track of priority
+        operators = orderOfOp.keys() # all the operators
+        postfix = '' # final expression
         s = Stack()
 
         tokens = txt.split()
         # invalid starting and ending value
-        if tokens[-1] in operators or tokens[0] in operators:
+        if tokens[-1] in operators or tokens[0] in operators: # checks if last and first tokens are operators
             return None
 
         numParen = 0
-        # running through the expression
-        for index in range(0, len(tokens)):
-            if numParen < 0:
+        for index in range(0, len(tokens)): # iterate through tokens
+            if numParen < 0: # Illegal Case: More closing brackets than open
                 return None
+
             currToken = tokens[index]
-                
-            if currToken in operators:
-                if tokens[index + 1] in operators:
+            if currToken in operators: # checks if currToken is an operator
+                if tokens[index + 1] in operators: # Illegal Case: Consecutive operators
                     return None
-                while(not s.isEmpty() and s.peek() != "(" and orderOfOp[s.peek()] >= orderOfOp[currToken]):
-                    if currToken == '^' and s.peek() == '^': #special case for consecutive exponents
+                # looping for the current parenthesis expression and correct priority
+                while(not s.isEmpty() and s.peek() != "(" and orderOfOp[s.peek()] >= orderOfOp[currToken]): 
+                    if currToken == '^' and s.peek() == '^': # special case for consecutive exponents
                         break
                     postfix += s.pop() + " "
                 s.push(currToken)
-            elif self._isNumber(currToken):
+            elif self._isNumber(currToken): # checks if currToken is numerical
                 if index + 1 != len(tokens):
-                    if tokens[index + 1] == '(' or self._isNumber(tokens[index + 1]):
+                    # Illegal Case: Consecutive number and parenthesis or consecutive numbers
+                    if tokens[index + 1] == '(' or self._isNumber(tokens[index + 1]): 
                         return None
-                postfix += str(float(currToken)) + " "
+                postfix += str(float(currToken)) + " " # adding the number in float form to the expression
             elif currToken == "(":
                 numParen += 1
                 s.push(currToken)
-            elif currToken == ")":
-                if index + 1 != len(tokens):
-                    if tokens[index + 1] == '(':
-                        return None
+            elif currToken == ")": # closing paren case
+                if index + 1 != len(tokens) and tokens[index + 1] == '(':
+                    return None 
                 numParen -= 1
-                while not s.isEmpty() and s.peek() != '(':
+                while not s.isEmpty() and s.peek() != '(': #loop until end of paren
                     postfix += s.pop() + " "
                 s.pop()
-            elif not self._isNumber(currToken):
+            else: # not a valid token
                 return None
-                
-        if numParen < 0:
+
+        if numParen != 0: # Illegal Case: uneven parenthesis
             return None
 
-        while not s.isEmpty() and s.peek() != '(':
+        while not s.isEmpty(): #keep popping unitl end of stack
             postfix += s.pop() + " "
 
-        
         return postfix.strip()
 
 
@@ -280,32 +298,27 @@ class Calculator:
 
         calcStack = Stack()   # method must use calcStack to compute the  expression
 
-        postFix = self._getPostfix(self.__expr)
-        if postFix == None:
-            #print('Error')
+        postFix = self._getPostfix(self.__expr) # getting postfix expression
+        if postFix == None: # checks for valid postfix expression
             return None
-        postFixExpr = postFix.split()
 
-        for op in postFixExpr:
-            if self._isNumber(op):
-                calcStack.push(float(op))
-            else:
-                num2 = calcStack.pop()
-                num1 = calcStack.pop()
-                if op == '^':
+        for token in postFix.split(): # iterating through postfix expression
+            if self._isNumber(token): 
+                calcStack.push(float(token)) # push number onto stack
+            else: # do respective calculations
+                num2, num1 = calcStack.pop(), calcStack.pop() 
+                if token == '^':
                     calcStack.push(num1 ** num2)
-                elif op == '*':
+                elif token == '*':
                     calcStack.push(num1 * num2)
-                elif op == '/':
+                elif token == '/':
                     calcStack.push(num1 / num2)
-                elif op == '+':
+                elif token == '+':
                     calcStack.push(num1 + num2)
-                elif op == '-':
+                elif token == '-':
                     calcStack.push(num1 - num2)
         
-        return calcStack.pop()
-                
-
+        return calcStack.pop() #pop the final value
 
 #=============================================== Part III ==============================================
 
@@ -364,7 +377,7 @@ class AdvancedCalculator:
             >>> C._isVariable('vol%2')
             False
         '''
-        return not word.isnum() and word.isalnum() and word in self.states
+        return word[0].isalpha() and word.isalnum()
        
 
     def _replaceVariables(self, expr):
@@ -379,21 +392,24 @@ class AdvancedCalculator:
             >>> C._replaceVariables('x2 - x1')
             '28.0 - 23.0'
         '''
-        tokens = expr.split(' ')
-
-        for i in range(0, len(tokens)):
-            if self._isVariable(tokens[i]):
-                tokens[i] = self.states[tokens[i]]
-        pass
+        retVal = ''
+        for token in expr.split(): # iterating through the expression
+            if self._isVariable(token) and (token != '(' or token != ')'): 
+                if token not in self.states: # Case for invalid variable
+                    return None
+                retVal += str(self.states[token]) + ' ' # retrieve variable value
+            else:
+                retVal += token + ' ' # no replacement
+        return retVal.strip()
 
     
     def calculateExpressions(self):
         self.states = {} 
         calcObj = Calculator()     # method must use calcObj to compute each expression
-        # YOUR CODE STARTS HERE
-        pass
+        
+        
 
 
 if __name__=='__main__':
     import doctest
-    doctest.run_docstring_examples(Calculator.calculate, globals(), name='HW1',verbose=True)
+    doctest.run_docstring_examples(AdvancedCalculator._replaceVariables, globals(), name='HW3',verbose=True)
