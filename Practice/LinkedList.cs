@@ -243,6 +243,33 @@ namespace Solution
             return retVal;
         }
 
+        public static Node rev3(Node head)
+        {
+            Node prev = null;
+            Node first = head;
+            Node second = null;
+            Node third = null;
+            if (first.next != null) second = first.next;
+            if (second.next != null)
+            {
+                third = second.next;
+                head = third;
+            }
+            while (first && second && third)
+            {
+                Node temp = third;
+                third.next = first.next;
+                second.next = first;
+                first.next = temp.next;
+                if (prev != null)
+                {
+                    prev.next = first;
+                }
+                prev = first;
+            }
+            return head;
+        }
+
         public static Node Delete(Node head, int value)
         {
             Node retVal = null;

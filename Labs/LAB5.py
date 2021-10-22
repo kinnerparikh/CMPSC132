@@ -111,49 +111,55 @@ class BinarySearchTree:
     def _mirrorHelper(self, node):
         if node is None:
             return None
-        if node.right is None and node.left is None:
+        if node.right is None and node.left is None: # case for node not being a parent
             return Node(node.value)
 
-        tempNode = Node(node.value)
+        retVal = Node(node.value) 
 
         temp = node.left
-        tempNode.left = self._mirrorHelper(node.right)
-        tempNode.right = self._mirrorHelper(temp)
+        retVal.left = self._mirrorHelper(node.right) # flipping the left to the right
+        retVal.right = self._mirrorHelper(temp) # flipping right to left
         
-        return tempNode
+        return retVal
 
     @property
     def getMin(self): 
-        temp = self.root
-        while temp.left is not None:
-            temp = temp.left
-        return temp
+        retVal = self.root
+        while retVal.left is not None: # traversing till left-most node
+            retVal = retVal.left
+        return retVal
 
     @property
     def getMax(self): 
-        temp = self.root
-        while temp.right is not None:
-            temp = temp.right
-        return temp
+        retVal = self.root
+        while retVal.right is not None: # traversing till right-most node
+            retVal = retVal.right
+        return retVal
 
     def __contains__(self,value):
-        return False if self.root is None else self._contains(self.root, value)
+        retVal = False
+        if self.root is not None:
+            retVal = self._contains(self.root, value)
+        return retVal
     
     def _contains(self, top, value):
+        retVal = False
         if top.value == value:
-            return True
-        if value < top.value and top.left is not None and self._contains(top.left, value):
-            return True
-        if value > top.value and top.right is not None and self._contains(top.right, value):
-            return True
-        return False
+            retVal = True
+        elif value < top.value and top.left is not None and self._contains(top.left, value): # checking the left side
+            retVal = True
+        elif value > top.value and top.right is not None and self._contains(top.right, value): # checking the right side
+            retVal = True
+        return retVal
 
     def getHeight(self, node):
-        if node is None: return -1
+        if node is None:
+            return -1
+
         left = self.getHeight(node.left)
         right = self.getHeight(node.right)
 
-        return left + 1 if left > right else right + 1
+        return max(left, right) + 1
 
 
 if __name__=='__main__':
