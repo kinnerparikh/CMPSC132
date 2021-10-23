@@ -167,6 +167,7 @@ class Calculator:
             '2.0 5.0 3.0 + 2.0 ^ 1.0 4.0 + + *'
             >>> x._getPostfix('2 * ( -5 + 3 ) ^ 2 + ( 1 + 4 )')
             '2.0 -5.0 3.0 + 2.0 ^ * 1.0 4.0 + +'
+            >>> x._getPostfix('2 * 10 / 0')
 
             # In invalid expressions, you might print an error message, adjust doctest accordingly
             # If you are veryfing the expression in calculate before passing to postfix, this cases are not necessary
@@ -206,6 +207,8 @@ class Calculator:
                     postfix += s.pop() + " "
                 s.push(currToken)
             elif self._isNumber(currToken): # checks if currToken is numerical
+                if s.peek() == '/' and currToken == '0': # divide by 0 case
+                    return None
                 if index + 1 != len(tokens):
                     # Illegal Case: Consecutive number and parenthesis or consecutive numbers
                     if tokens[index + 1] == '(' or self._isNumber(tokens[index + 1]): 
@@ -433,4 +436,4 @@ class AdvancedCalculator:
 
 if __name__=='__main__':
     import doctest
-    doctest.run_docstring_examples(AdvancedCalculator, globals(), name='HW3',verbose=True)
+    doctest.run_docstring_examples(Calculator._getPostfix, globals(), name='HW3',verbose=True)
