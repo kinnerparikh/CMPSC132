@@ -44,19 +44,25 @@ class BinarySearchTree:
     # Modify the insert and _insert methods to allow the operations given in the PDF
     def insert(self, value):
         if self.root is None:
-            self.root=Node(value)
+            newVal = dict()
+            newVal[''.join(sorted(value.lower()))] = [value]
+            self.root = Node(newVal)
         else:
             self._insert(self.root, value)
 
 
     def _insert(self, node, value):
-        if(value<node.value):
-            if(node.left==None):
+        currKey = ''.join(sorted(value.lower()))
+        if currKey in node.value:
+            node.value[currKey].append(value)
+        else if currKey
+        if(currKey < node[0]):
+            if(node.left == None):
                 node.left = Node(value)
             else:
                 self._insert(node.left, value)
         else:   
-            if(node.right==None):
+            if(node.right == None):
                 node.right = Node(value)
             else:
                 self._insert(node.right, value)
@@ -76,11 +82,7 @@ class BinarySearchTree:
         if node is not None:
             self._inorderHelper(node.left) 
             print(node.value, end=' : ') 
-            self._inorderHelper(node.right)   
-
-    
-
-
+            self._inorderHelper(node.right)
 
 class Anagrams:
     '''
