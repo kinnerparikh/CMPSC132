@@ -6,6 +6,9 @@
 #       thoroughly documented
 
 
+from typing import no_type_check_decorator
+
+
 class Node:
     def __init__(self, value):
         self.value = value
@@ -36,17 +39,18 @@ class BinarySearchTree:
         >>> x.root.left.right
         Node({'dikn': ['kind']})
     '''
-
+    
     def __init__(self):
         self.root = None
+        self.nodesCounter = 0 #remove
 
 
     # Modify the insert and _insert methods to allow the operations given in the PDF
     def insert(self, value):
         if self.root is None:
-            newVal = dict()
-            newVal[''.join(sorted(value.lower()))] = [value]
-            self.root = Node(newVal)
+            # creating dictionary pair of lowered and sorted key and value list
+            self.root = Node({''.join(sorted(value.lower())): [value]})
+            self.nodesCounter += 1 #remove
         else:
             self._insert(self.root, value)
 
@@ -55,15 +59,16 @@ class BinarySearchTree:
         currKey = ''.join(sorted(value.lower()))
         if currKey in node.value:
             node.value[currKey].append(value)
-        else if currKey
-        if(currKey < node[0]):
+        elif(currKey < list(node.value.keys())[0]):
             if(node.left == None):
-                node.left = Node(value)
+                node.left = Node({currKey: [value]})
+                self.nodesCounter += 1 #remove
             else:
                 self._insert(node.left, value)
         else:   
             if(node.right == None):
-                node.right = Node(value)
+                node.right = Node({currKey: [value]})
+                self.nodesCounter += 1 #remove
             else:
                 self._insert(node.right, value)
 
@@ -93,7 +98,7 @@ class Anagrams:
         >>> isinstance(x.__dict__.get('_bst'), BinarySearchTree)
         True
         >>> x = Anagrams(5)
-        >>> x.create('words_small.txt')
+        >>> x.create('\\Homeworks\\words_small.txt')
         >>> x.getAnagrams('tap')
         'No match'
         >>> x.getAnagrams('arm')
@@ -103,22 +108,43 @@ class Anagrams:
         >>> x._bst.printInorder
         {'a': ['a']} : {'adns': ['ands', 'sand']} : {'ahms': ['sham', 'hams']} : {'amt': ['tam', 'mat']} : {'arst': ['arts', 'rats', 'star']} : {'arsty': ['artsy']} : {'art': ['art', 'tar', 'rat']} : 
     '''
-    
+    _bst = BinarySearchTree()
     def __init__(self, word_size):
-        # -YOUR CODE STARTS HERE
-        pass
-
-
+        self.word_size = word_size
 
 
     def create(self, file_name):
         # -YOUR CODE STARTS HERE
         # Code for reading the contents of file_name is given in the PDF
-        pass
+        with open(file_name) as f:
+            contents = f.read()
 
+        wordCounter = 0 #remove
+        for i in contents.split():
+            if len(i) <= self.word_size:
+                self._bst.insert(i)
+                wordCounter += 1 #remove
+        
+        print(f'Max Length: {self.word_size}, Words Inserted: {wordCounter}, Nodes Inserted: {self._bst.nodesCounter}')
 
     def getAnagrams(self, word):
-        # -YOUR CODE STARTS HERE
-        pass
-
-
+        head = self._bst
+        key = ''.join(sorted(word.lower()))
+        retVal = 'No match'
+        while (head != None):
+            if (key in head.value):
+                retVal = head.value[key]
+            elif (key < list(head.value.keys())[0]):
+                head = head.left
+            else:
+                head = head.right
+        return retVal
+        
+ang = Anagrams(9)
+ang.create('.\Homeworks\words_large.txt')
+'''
+if __name__=='__main__':
+    import doctest
+    doctest.run_docstring_examples(BinarySearchTree, globals(), name='HW3',verbose=True)
+    
+    '''
