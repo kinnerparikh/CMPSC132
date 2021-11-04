@@ -5,6 +5,10 @@
 #       You might add additional methods to encapsulate and simplify the operations, but they must be
 #       thoroughly documented
 
+
+from typing import no_type_check_decorator
+
+
 class Node:
     def __init__(self, value):
         self.value = value
@@ -18,6 +22,7 @@ class Node:
 
 
 class BinarySearchTree:
+
     def __init__(self):
         self.root = None
 
@@ -34,14 +39,15 @@ class BinarySearchTree:
         currKey = ''.join(sorted(value.lower()))
         if currKey in node.value: # case for anagram
             node.value[currKey].append(value)
-        # case for key less than current node (go to left)
+        # case for key less than current node (left side)
         elif(currKey < list(node.value.keys())[0]): 
-            if(node.left == None): # empty left side
+            if(node.left == None):
                 node.left = Node({currKey: [value]})
             else:
                 self._insert(node.left, value)
+        # case for key greater than current node (right side)
         else:   
-            if(node.right == None): # empty right side
+            if(node.right == None):
                 node.right = Node({currKey: [value]})
             else:
                 self._insert(node.right, value)
@@ -63,9 +69,11 @@ class BinarySearchTree:
             self._inorderHelper(node.right)
 
 class Anagrams:
-    _bst = BinarySearchTree()
+    
     def __init__(self, word_size):
         self.word_size = word_size
+        self._bst = BinarySearchTree()
+
 
     def create(self, file_name):
         # -YOUR CODE STARTS HERE
@@ -77,9 +85,9 @@ class Anagrams:
         for i in contents.split():
             if len(i) <= self.word_size:
                 self._bst.insert(i)
-        
+
     def getAnagrams(self, word):
-        head = self._bst
+        head = self._bst.root
         key = ''.join(sorted(word.lower()))
         # running through _bst
         while (head != None):
