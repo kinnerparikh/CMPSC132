@@ -39,7 +39,7 @@ class BinarySearchTree:
         >>> x.root.left.right
         Node({'dikn': ['kind']})
     '''
-    
+
     def __init__(self):
         self.root = None
         self.nodesCounter = 0 #remove
@@ -130,21 +130,20 @@ class Anagrams:
     def getAnagrams(self, word):
         head = self._bst
         key = ''.join(sorted(word.lower()))
-        retVal = 'No match'
         while (head != None):
             if (key in head.value):
-                retVal = head.value[key]
+                return head.value[key]
             elif (key < list(head.value.keys())[0]):
                 head = head.left
             else:
                 head = head.right
-        return retVal
+        return 'No match'
         
 ang = Anagrams(9)
 ang.create('.\Homeworks\words_large.txt')
+
 '''
 if __name__=='__main__':
     import doctest
     doctest.run_docstring_examples(BinarySearchTree, globals(), name='HW3',verbose=True)
-    
-    '''
+''' 
