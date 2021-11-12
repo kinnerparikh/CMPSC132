@@ -5,6 +5,6 @@ Work for the Penn State CMPSC_132 Class
 
 * [Homework 1](../main/Homeworks/HW1.py)
 * [Homework 2](../main/Homeworks/HW2.py)
-* [Homework 2](../main/Homeworks/HW3.py)
-* [Homework 2](../main/Homeworks/HW4.py)
-* [Homework 2](../main/Homeworks/HW5.py)
+* [Homework 3](../main/Homeworks/HW3.py)
+* [Homework 4](../main/Homeworks/HW4.py)
+* [Homework 5](../main/Homeworks/HW5.py)
