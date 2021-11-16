@@ -47,8 +47,11 @@ class ContentItem:
         return False
 
     def __hash__(self):
-        # YOUR CODE STARTS HERE
-        pass
+        retVal = 0
+        for letter in self.header:
+            retVal += ord(letter)
+        
+        return retVal % 3
 
 
 
@@ -243,5 +246,8 @@ class Cache:
         # YOUR CODE STARTS HERE
         pass
 
+if __name__=='__main__':
+    import doctest
+    doctest.run_docstring_examples(ContentItem, globals(), name='HW3',verbose=True)
 
    
