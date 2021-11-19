@@ -14,8 +14,18 @@ def matrixCalculator(matrix1, matrix2, operation):
         >>> matrixCalculator([[8, 9, 10], [7.5, 2, -8], [1, 1, 1]], [[4, 2, 3], [43, 2, 32], [-2, 5.5, 3]],'sub')
         [[4, 7, 7], [-35.5, 0, -40], [3, -4.5, -2]]
     '''
-    # YOUR CODE STARTS HERE
-    pass
+    # non-list comprehension solution
+    # --------------------------------------
+    # temp = matrix1
+    # for i in range(len(matrix1)):
+    #     for j in range(len(matrix1[0])):
+    #         if operation == 'add':
+    #             temp[i][j] += matrix2[i][j]
+    #         else:
+    #             temp[i][j] -= matrix2[i][j]
+    if operation == 'add': return [[matrix1[i][j] + matrix2[i][j] for j in range(len(matrix1[0]))] for i in range(len(matrix1))]
+    elif operation == 'sub': return [[matrix1[i][j] - matrix2[i][j] for j in range(len(matrix1[0]))] for i in range(len(matrix1))]
+    
 
 
 
@@ -164,4 +174,7 @@ def genFib(fn):
     # YOUR CODE STARTS HERE
     pass
 
-    
+
+if __name__=='__main__':
+    import doctest
+    doctest.run_docstring_examples(matrixCalculator, globals(), name='HW3',verbose=True)

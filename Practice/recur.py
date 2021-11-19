@@ -10,7 +10,7 @@ def _hash(key):
     return ord(key[ 0 ]) + ord(key[ 1 ])
 
 
-key = 'Ca'
-print(_hash(key) % 101)
+a = [1, 2, 3, 4]
+b = [1, 2, 3, 4]
 
 #63, 64, 65, 66, 67, 68, 100
