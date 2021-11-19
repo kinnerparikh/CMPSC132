@@ -315,6 +315,8 @@ class Calculator:
                 elif token == '*':
                     calcStack.push(num1 * num2)
                 elif token == '/':
+                    if num2 == 0: # divide by 0 case
+                        return None
                     calcStack.push(num1 / num2)
                 elif token == '+':
                     calcStack.push(num1 + num2)

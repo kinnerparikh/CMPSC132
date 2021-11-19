@@ -163,7 +163,7 @@ class Staff(Person):
     '''
     def __init__(self, name, ssn, supervisor=None):
         super().__init__(name, ssn) #initializes the parent class object
-        self.supervisor = supervisor
+        self.__supervisor = supervisor
 
     def __str__(self):
         return f'Staff({self.name}, {self.id})'
@@ -186,7 +186,7 @@ class Staff(Person):
         '''
         Property method for getting the supervisor.
         '''
-        return self.supervisor
+        return self.__supervisor
 
     def setSupervisor(self, new_supervisor):
         '''
@@ -194,7 +194,7 @@ class Staff(Person):
         '''
         if not isinstance(new_supervisor, Staff):
             return None
-        self.supervisor = new_supervisor #sets the new supervisor
+        self.__supervisor = new_supervisor #sets the new supervisor
         return 'Completed!'
 
     def applyHold(self, student):
