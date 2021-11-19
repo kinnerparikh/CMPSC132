@@ -6,7 +6,7 @@
 
 class Node:
     def __init__(self, content):
-        self.value = content
+        self.value : ContentItem = content
         self.next = None
 
     def __str__(self):
@@ -104,7 +104,7 @@ class CacheList:
         <BLANKLINE>
     '''
     def __init__(self, size):
-        self.head = None
+        self.head : Node = None
         self.maxSize = size
         self.remainingSpace = size
         self.numItems = 0
@@ -122,36 +122,88 @@ class CacheList:
     def __len__(self):
         return self.numItems
     
-    def put(self, content, evictionPolicy):
-        # YOUR CODE STARTS HERE
-        pass
+    def put(self, content: ContentItem, evictionPolicy: str):
+        if content.size > self.maxSize:
+            return 'Insertion not allowed'
+        if content.cid in self:
+            return f'Content {content.cid} already in cache, insertion not allowed'
+        while self.remainingSpace < content.size:
+            if evictionPolicy == 'lru':
+                self.lruEvict()
+            elif evictionPolicy == 'mru':
+                self.mruEvict()
+        
+        temp = Node(content)
+        temp.next = self.head
+        self.head = temp
 
-    
+        self.remainingSpace -= content.size
+        self.numItems += 1
+        return f'INSERTED: {content}'
+        
 
     def __contains__(self, cid):
-        # YOUR CODE STARTS HERE
-        pass
+        prev, curr = None, self.head
+        # loop till end
+        while curr is not None:
+            if curr.value.cid == cid:
+                # moving node to front of list
+                prev.next = curr.next
+                curr.next = self.head
+                self.head = curr
+                return True
+            prev, curr = curr, curr.next
+        
+        # loop ends when it reaches end of linked list
+        return False
 
 
-    def update(self, cid, content):
-        # YOUR CODE STARTS HERE
-        pass
+    def update(self, cid, content: ContentItem):
+        if cid not in self:
+            return 'Cache miss!'
+        elif self.remainingSpace + self.head.value.size < content.size:
+            return 'Cache miss!'
+        self.remainingSpace += self.head.value.size - content.size
+        self.head.value = content
+        return f'UPDATED: {content}'
 
 
 
     def mruEvict(self):
-        # YOUR CODE STARTS HERE
-        pass
+        # empty case
+        if self.head is None:
+            return
+        
+        self.remainingSpace += self.head.value.size
+        self.numItems -= 1
+
+        # deleting head
+        temp = self.head
+        self.head = temp.next
+        temp = None
+
 
     
     def lruEvict(self):
-        # YOUR CODE STARTS HERE
-        pass
+        # empty case
+        if self.head is None:
+            return
+
+        # finding the last value
+        prev, curr = None, self.head
+        while curr.next is not None:
+            prev, curr = curr, curr.next
+            
+        self.remainingSpace += curr.value.size
+        self.numItems -= 1
+        prev.next = None
 
     
     def clear(self):
-        # YOUR CODE STARTS HERE
-        pass
+        self.head = None
+        self.remainingSpace = self.maxSize
+        self.numItems = 0
+        return 'Cleared cache!'
 
 
 class Cache:
@@ -248,6 +300,4 @@ class Cache:
 
 if __name__=='__main__':
     import doctest
-    doctest.run_docstring_examples(ContentItem, globals(), name='HW3',verbose=True)
-
-   
+    doctest.run_docstring_examples(CacheList, globals(), name='HW3',verbose=True)
