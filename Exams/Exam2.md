@@ -2,7 +2,7 @@
 ## Multiple Choice Questions
 ### Question 1
 Recall the implementation of a singly linked list discussed in Module 5. If you define the method mystery(self) inside the Linked List class as shown below, what does mystery do?
-``` 
+```py
 current = self.head
 while current is not None:
     if current.value == 38:
@@ -16,6 +16,7 @@ Choices:
     b) Returns True if no node in the list has value 38, False otherwise 
     c) Returns True if one node in the list has value 38, False otherwise <- 
     d) Returns True if the list has 38 nodes, False otherwise 
+
 
 ### Question 2
 Recall the conversion from infix to postfix notation algorithm discussed in lectures. Assume that the algorithm has read and processed 10 tokens during the conversion and that the stack now look like this:
@@ -186,7 +187,7 @@ Example:
 
 For the linked list x =  3 -> 5 -> 8 -> 9, toList(x)  returns the Python List [3, 5, 8, 9]
 
-```
+``` py
 Solution: 
 def toList(linked_list):
    retList = []
@@ -201,7 +202,7 @@ def toList(linked_list):
 Recall the Stack class from Homework 3. Such data structure contained a reference to the top node in the stack and can perform the operations len, isEmpty, push, pop and peek only. Write the Python code for the method deleteLargest( ) that takes no parameters and will find and remove the largest value in the Stack. When the Stack is empty, it returns None, otherwise, it returns the maximum value and updates the original stack. You can assume all values in the stack are numeric.
 
 For example, if the stack x contains the elements 5, 7, 9, 3, 1, 6, then a call to deleteLargest returns 9, and  x is now 5, 7, 3, 1, 6:
-```
+```py
 >>> x
 Top:Node(5)
 Stack:
@@ -222,7 +223,7 @@ Stack:
 1
 6
 ```
-```
+```py
 My Solution:
 def deleteLartest(self):
     if self.isEmpty():
