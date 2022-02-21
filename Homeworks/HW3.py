@@ -90,7 +90,9 @@ class Stack:
         if self.isEmpty():
             return None
         value = self.top.value
+        delVal = self.top
         self.top = self.top.next # move the pointer to the next Node
+        delVal = None # deletes the first node from memory
         return value
 
     def peek(self):

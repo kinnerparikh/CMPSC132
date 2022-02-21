@@ -150,6 +150,11 @@ class CacheList:
 
     
     def clear(self):
+        while (self.head.next is not None): #traversing the list and deleting the vals
+            temp = self.head.next
+            self.head = None
+            self.head = temp
+            
         self.head = None
         self.remainingSpace = self.maxSize
         self.numItems = 0

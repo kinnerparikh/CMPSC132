@@ -24,7 +24,7 @@ def rectangle(perimeter,area):
     if not perimeter % 2 == 0: #perimeters cannot be odd
         return False
 
-    longSide = (perimeter + (perimeter**2 - 16*area)**0.5)/4 #logic for finding one side of the rectangle
+    longSide = (perimeter + abs(perimeter**2 - 16*area)**0.5)/4 #logic for finding one side of the rectangle
     shortSide = area / longSide
 
     if longSide.is_integer() and shortSide.is_integer(): #checking if both side lengths are integers
@@ -69,6 +69,7 @@ def frequency(aString):
 
     
 
+# THIS IMPLEMENTATION DOES NOT WORK CORRECTLY 
 def successors(file):
     """
         >>> expected = {'.': ['We', 'Maybe'], 'We': ['came'], 'came': ['to'], 'to': ['learn', 'have', 'make'], 'learn': [',', 'how'], ',': ['eat'], 'eat': ['some'], 'some': ['pizza'], 'pizza': ['and', 'too'], 'and': ['to'], 'have': ['fun'], 'fun': ['.'], 'Maybe': ['to'], 'how': ['to'], 'make': ['pizza'], 'too': ['!']}
